@@ -3,38 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تقرير محطة الحاير</title>
+    <title>تقرير محطة الحاير - السعة ثابتة</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; padding: 10px; margin: 0; padding-bottom: 80px; }
         .container { max-width: 800px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         h2 { color: #0D47A1; text-align: center; font-size: 1.4em; margin-bottom: 15px; }
-        
         .section { border: 1px solid #bbdefb; border-radius: 8px; padding: 12px; margin-bottom: 15px; background: #fff; }
         .section-header { background-color: #0D47A1; color: white; padding: 8px 12px; border-radius: 6px; margin: -12px -12px 12px -12px; font-weight: bold; font-size: 0.95em; }
-        
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
         .field { display: flex; flex-direction: column; }
-        
         label { font-size: 0.8em; color: #1565C0; margin-bottom: 3px; font-weight: bold; }
         input, textarea { padding: 10px; border: 1px solid #90caf9; border-radius: 6px; font-size: 15px; background-color: #fdfdfd; }
+        /* ستايل الخانات المحمية */
+        input[readonly] { background-color: #f1f3f4; color: #5f6368; border: 1px solid #dadce0; cursor: not-allowed; font-weight: bold; }
         .full-width { grid-column: 1 / -1; }
 
-        /* شريط الأزرار المصغر في الأسفل */
         .toolbar { 
             position: fixed; bottom: 0; left: 0; right: 0; 
-            background: #ffffff; padding: 8px; 
-            display: flex; gap: 5px; 
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); 
-            z-index: 1000; border-top: 1px solid #ddd;
+            background: #ffffff; padding: 8px; display: flex; gap: 5px; 
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid #ddd;
         }
-        
-        button { 
-            flex: 1; padding: 8px 2px; border: none; border-radius: 6px; 
-            font-size: 12px; font-weight: bold; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; gap: 4px;
-        }
-
+        button { flex: 1; padding: 8px 2px; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
         .btn-save { background-color: #007bff; color: white; }
         .btn-export { background-color: #2E7D32; color: white; }
         .btn-reset { background-color: #f8f9fa; color: #dc3545; border: 1px solid #dc3545; flex: 0.5; }
@@ -58,9 +48,10 @@
         <div class="section">
             <div class="section-header">💧 مخرجات محطة الحاير</div>
             <div class="grid">
-                <div class="field"><label>كمية إنتاج (م3)</label><input type="number" id="h_prod"></div>
-                <div class="field"><label>كمية تصدير (م3)</label><input type="number" id="h_export"></div>
-                <div class="field"><label>إنتاج احتياطي (م3)</label><input type="number" id="h_spare"></div>
+                <div class="field"><label>السعة التشغيلية (م3)</label><input type="number" id="h_capacity" value="50000" readonly></div>
+                <div class="field"><label>كمية الإنتاج (م3)</label><input type="number" id="h_prod" oninput="calculateSpare()"></div>
+                <div class="field"><label>إنتاج احتياطي (تلقائي)</label><input type="number" id="h_spare" readonly></div>
+                <div class="field"><label>كمية التصدير (م3)</label><input type="number" id="h_export"></div>
             </div>
         </div>
 
@@ -103,33 +94,43 @@
 </div>
 
 <script>
-    // تحديث التاريخ يومياً عند فتح الصفحة
+    // معادلة حساب الإنتاج الاحتياطي تلقائياً
+    function calculateSpare() {
+        const capacity = 50000; // السعة ثابتة كما طلبت
+        const production = parseFloat(document.getElementById('h_prod').value) || 0;
+        const spare = production - capacity;
+        document.getElementById('h_spare').value = spare;
+    }
+
     window.onload = function() {
+        // تعيين تاريخ اليوم
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('reportDate').value = today;
 
         // استرجاع البيانات المحفوظة
-        const savedData = localStorage.getItem('alhair_v4_data');
+        const savedData = localStorage.getItem('alhair_v6_data');
         if (savedData) {
             const data = JSON.parse(savedData);
             Object.keys(data).forEach(key => {
+                // لا نسترجع التاريخ لضمان ظهور تاريخ اليوم الحالي دائماً
                 if(key !== 'reportDate' && document.getElementById(key)) {
                     document.getElementById(key).value = data[key];
                 }
             });
+            calculateSpare(); // تحديث الحساب التلقائي بعد الاسترجاع
         }
     };
 
     function saveToDevice() {
         const formData = {};
         document.querySelectorAll('input, textarea').forEach(input => formData[input.id] = input.value);
-        localStorage.setItem('alhair_v4_data', JSON.stringify(formData));
-        alert('✅ تم الحفظ');
+        localStorage.setItem('alhair_v6_data', JSON.stringify(formData));
+        alert('✅ تم حفظ البيانات في جوالك');
     }
 
     function resetData() {
-        if(confirm('مسح البيانات؟')) {
-            localStorage.removeItem('alhair_v4_data');
+        if(confirm('هل تريد مسح جميع البيانات؟')) {
+            localStorage.removeItem('alhair_v6_data');
             location.reload();
         }
     }
@@ -142,9 +143,10 @@
             ["الاستهلاك الكهربائي:", document.getElementById('power').value],
             [],
             ["البيان", "القيمة"],
-            ["إنتاج محطة الحاير", document.getElementById('h_prod').value],
-            ["تصدير محطة الحاير", document.getElementById('h_export').value],
-            ["إنتاج احتياطي", document.getElementById('h_spare').value],
+            ["السعة التشغيلية", "50000"],
+            ["كمية الإنتاج", document.getElementById('h_prod').value],
+            ["الإنتاج الاحتياطي", document.getElementById('h_spare').value],
+            ["كمية التصدير", document.getElementById('h_export').value],
             [],
             ["حالة الآبار", "في الخدمة:", document.getElementById('wells_in').value, "خارج الخدمة:", document.getElementById('wells_out').value],
             ["ملاحظات الآبار:", document.getElementById('well_notes').value],
