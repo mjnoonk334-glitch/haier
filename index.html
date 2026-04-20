@@ -6,23 +6,55 @@
     <title>تقرير وحدة تنقية الحاير</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; padding: 10px; margin: 0; padding-bottom: 80px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; padding: 10px; margin: 0; padding-bottom: 100px; }
         .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         h2 { color: #0D47A1; text-align: center; border-bottom: 3px solid #0D47A1; padding-bottom: 10px; }
-        .section { border: 1px solid #bbdefb; border-radius: 10px; padding: 15px; margin-bottom: 20px; position: relative; }
+        .section { border: 1px solid #bbdefb; border-radius: 10px; padding: 15px; margin-bottom: 20px; background: #fff; }
         .section-header { background-color: #0D47A1; color: white; padding: 10px 15px; border-radius: 8px; margin: -15px -15px 15px -15px; font-weight: bold; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
         .field { display: flex; flex-direction: column; }
         label { font-size: 0.85em; color: #1565C0; margin-bottom: 4px; font-weight: bold; }
-        input, textarea { padding: 12px; border: 1px solid #90caf9; border-radius: 8px; font-size: 16px; }
+        input, textarea { padding: 12px; border: 1px solid #90caf9; border-radius: 8px; font-size: 16px; background-color: #fdfdfd; }
+        input:focus { border-color: #0D47A1; outline: none; background: #fff; }
         .full-width { grid-column: 1 / -1; }
         
-        /* شريط الأزرار السفلي */
-        .toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 15px; display: flex; gap: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; }
-        button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-save { background-color: #007bff; color: white; }
-        .btn-export { background-color: #2E7D32; color: white; }
-        .btn-reset { background-color: #dc3545; color: white; flex: 0.5; }
+        /* شريط الأزرار السفلي العائم */
+        .toolbar { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: #ffffff; 
+            padding: 15px; 
+            display: flex; 
+            gap: 8px; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.15); 
+            z-index: 1000;
+            border-top: 2px solid #0D47A1;
+        }
+        
+        button { 
+            flex: 1; 
+            padding: 12px 5px; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            gap: 5px;
+            transition: 0.2s;
+        }
+
+        .btn-save { background-color: #007bff; color: white; } /* زر الحفظ أزرق */
+        .btn-export { background-color: #2E7D32; color: white; } /* زر الإكسل أخضر */
+        .btn-reset { background-color: #f8f9fa; color: #dc3545; border: 1px solid #dc3545; flex: 0.6; } /* زر المسح */
+
+        button:active { transform: scale(0.95); opacity: 0.8; }
+        .icon { font-size: 20px; }
     </style>
 </head>
 <body>
@@ -60,8 +92,8 @@
         <div class="section">
             <div class="section-header">🚜 حالة الآبار</div>
             <div class="grid">
-                <div class="field"><label>في الخدمة</label><input type="number" id="wells_in"></div>
-                <div class="field"><label>خارج الخدمة</label><input type="number" id="wells_out"></div>
+                <div class="field"><label>آبار في الخدمة</label><input type="number" id="wells_in"></div>
+                <div class="field"><label>آبار خارج الخدمة</label><input type="number" id="wells_out"></div>
                 <div class="field full-width"><label>ملاحظات الآبار</label><textarea id="well_notes" rows="2"></textarea></div>
             </div>
         </div>
@@ -90,16 +122,25 @@
 </div>
 
 <div class="toolbar">
-    <button class="btn-reset" onclick="resetData()">🗑️ مسح</button>
-    <button class="btn-save" onclick="saveToDevice()">💾 حفظ التعديلات</button>
-    <button class="btn-export" onclick="exportExcel()">📊 تصدير Excel</button>
+    <button class="btn-reset" onclick="resetData()">
+        <span class="icon">🗑️</span>
+        <span>مسح</span>
+    </button>
+    <button class="btn-save" onclick="saveToDevice()">
+        <span class="icon">💾</span>
+        <span>حفظ التعديلات</span>
+    </button>
+    <button class="btn-export" onclick="exportExcel()">
+        <span class="icon">📊</span>
+        <span>تصدير Excel</span>
+    </button>
 </div>
 
 <script>
-    // عند تحميل الصفحة، استرجع البيانات المحفوظة إن وجدت
+    // استرجاع البيانات عند فتح الصفحة
     window.onload = function() {
         document.getElementById('reportDate').valueAsDate = new Date();
-        const savedData = localStorage.getItem('alhair_report_draft');
+        const savedData = localStorage.getItem('alhair_v2_data');
         if (savedData) {
             const data = JSON.parse(savedData);
             Object.keys(data).forEach(key => {
@@ -108,18 +149,18 @@
         }
     };
 
-    // حفظ التعديلات في ذاكرة الجهاز (المتصفح)
+    // وظيفة حفظ التعديلات في ذاكرة الجوال
     function saveToDevice() {
         const formData = {};
         const inputs = document.querySelectorAll('input, textarea');
         inputs.forEach(input => formData[input.id] = input.value);
-        localStorage.setItem('alhair_report_draft', JSON.stringify(formData));
-        alert('✅ تم حفظ التعديلات بنجاح في متصفحك');
+        localStorage.setItem('alhair_v2_data', JSON.stringify(formData));
+        alert('✅ تم حفظ البيانات في جوالك بنجاح!');
     }
 
     function resetData() {
-        if(confirm('هل تريد مسح جميع الحقول؟')) {
-            localStorage.removeItem('alhair_report_draft');
+        if(confirm('هل أنت متأكد من مسح جميع البيانات المدخلة؟')) {
+            localStorage.removeItem('alhair_v2_data');
             location.reload();
         }
     }
@@ -152,7 +193,7 @@
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.aoa_to_sheet(reportData);
         ws['!dir'] = "rtl";
-        XLSX.utils.book_append_sheet(wb, ws, "التقرير");
+        XLSX.utils.book_append_sheet(wb, ws, "تقرير الحاير");
         XLSX.writeFile(wb, `تقرير_الحاير_${date}.xlsx`);
     }
 </script>
