@@ -3,123 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تقرير وحدة تنقية الحاير المتكامل</title>
+    <title>تقرير وحدة تنقية الحاير</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; padding: 10px; margin: 0; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; padding: 10px; margin: 0; padding-bottom: 80px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         h2 { color: #0D47A1; text-align: center; border-bottom: 3px solid #0D47A1; padding-bottom: 10px; }
-        
-        .section { border: 1px solid #bbdefb; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #ffffff; }
-        .section-header { background-color: #0D47A1; color: white; padding: 10px 15px; border-radius: 8px; margin: -15px -15px 15px -15px; font-weight: bold; display: flex; align-items: center; }
-        
+        .section { border: 1px solid #bbdefb; border-radius: 10px; padding: 15px; margin-bottom: 20px; position: relative; }
+        .section-header { background-color: #0D47A1; color: white; padding: 10px 15px; border-radius: 8px; margin: -15px -15px 15px -15px; font-weight: bold; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
         .field { display: flex; flex-direction: column; }
-        
-        label { font-size: 0.85em; color: #1565C0; margin-bottom: 4px; font-weight: bold; } /* تمثل الخلايا الزرقاء الثابتة */
-        input, select, textarea { padding: 10px; border: 1px solid #90caf9; border-radius: 6px; font-size: 15px; }
-        input:focus { border-color: #0D47A1; outline: none; box-shadow: 0 0 5px rgba(13,71,161,0.2); }
-        
+        label { font-size: 0.85em; color: #1565C0; margin-bottom: 4px; font-weight: bold; }
+        input, textarea { padding: 12px; border: 1px solid #90caf9; border-radius: 8px; font-size: 16px; }
         .full-width { grid-column: 1 / -1; }
-        .btn-export { width: 100%; padding: 18px; background-color: #2E7D32; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-export:active { transform: translateY(2px); box-shadow: none; }
         
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+        /* شريط الأزرار السفلي */
+        .toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 15px; display: flex; gap: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-save { background-color: #007bff; color: white; }
+        .btn-export { background-color: #2E7D32; color: white; }
+        .btn-reset { background-color: #dc3545; color: white; flex: 0.5; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>تقرير وحدة تنقية الحاير اليومي</h2>
+    <h2>تقرير تشغيل وحدة الحاير</h2>
 
-    <div class="section">
-        <div class="section-header">📍 بيانات عامة</div>
-        <div class="grid">
-            <div class="field"><label>التاريخ</label><input type="date" id="reportDate"></div>
-            <div class="field"><label>اسم المحطة</label><input type="text" id="stationName" value="وحدة تنقية الحاير"></div>
+    <form id="mainForm">
+        <div class="section">
+            <div class="section-header">📍 بيانات عامة</div>
+            <div class="grid">
+                <div class="field"><label>التاريخ</label><input type="date" id="reportDate"></div>
+                <div class="field"><label>الاستهلاك (MW/DAY)</label><input type="number" id="power"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">💧 مخرجات المحطة (م3)</div>
-        <div class="grid">
-            <div class="field"><label>الشميسي: إنتاج</label><input type="number" id="sh_prod"></div>
-            <div class="field"><label>الشميسي: تصدير</label><input type="number" id="sh_export"></div>
-            <div class="field"><label>الشميسي: احتياطي</label><input type="number" id="sh_spare"></div>
-            <div class="field"><label>منفوحة: إنتاج</label><input type="number" id="mn_prod"></div>
-            <div class="field"><label>منفوحة: تصدير</label><input type="number" id="mn_export"></div>
-            <div class="field"><label>منفوحة: احتياطي</label><input type="number" id="mn_spare"></div>
+        <div class="section">
+            <div class="section-header">💧 مخرجات المحطة (الشميسي)</div>
+            <div class="grid">
+                <div class="field"><label>كمية إنتاج</label><input type="number" id="sh_prod"></div>
+                <div class="field"><label>كمية تصدير</label><input type="number" id="sh_export"></div>
+                <div class="field"><label>إنتاج احتياطي</label><input type="number" id="sh_spare"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">🚜 حالة الآبار</div>
-        <div class="grid">
-            <div class="field"><label>عدد الآبار في الخدمة</label><input type="number" id="wells_in"></div>
-            <div class="field"><label>عدد الآبار خارج الخدمة</label><input type="number" id="wells_out"></div>
-            <div class="field full-width"><label>ملاحظات الآبار</label><textarea id="well_notes" rows="2" placeholder="اكتب أي ملاحظات فنية على الآبار هنا..."></textarea></div>
+        <div class="section">
+            <div class="section-header">💧 مخرجات المحطة (منفوحة)</div>
+            <div class="grid">
+                <div class="field"><label>كمية إنتاج</label><input type="number" id="mn_prod"></div>
+                <div class="field"><label>كمية تصدير</label><input type="number" id="mn_export"></div>
+                <div class="field"><label>إنتاج احتياطي</label><input type="number" id="mn_spare"></div>
+            </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">🧪 جودة المياه (Product Water)</div>
-        <div class="grid">
-            <div class="field"><label>Temp (°C)</label><input type="number" step="0.1" id="q_temp"></div>
-            <div class="field"><label>Turbidity (NTU)</label><input type="number" step="0.1" id="q_turb"></div>
-            <div class="field"><label>Free Chlorine (mg/l)</label><input type="number" step="0.1" id="q_cl"></div>
-            <div class="field"><label>pH</label><input type="number" step="0.1" id="q_ph"></div>
-            <div class="field"><label>Conductivity (µS/cm)</label><input type="number" id="q_cond"></div>
-            <div class="field"><label>TDS (mg/l)</label><input type="number" id="q_tds"></div>
+        <div class="section">
+            <div class="section-header">🚜 حالة الآبار</div>
+            <div class="grid">
+                <div class="field"><label>في الخدمة</label><input type="number" id="wells_in"></div>
+                <div class="field"><label>خارج الخدمة</label><input type="number" id="wells_out"></div>
+                <div class="field full-width"><label>ملاحظات الآبار</label><textarea id="well_notes" rows="2"></textarea></div>
+            </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="section-header">🛠️ تقرير الصيانة</div>
-        <div class="grid">
-            <div class="field"><label>اسم المعدة</label><input type="text" id="m_equip"></div>
-            <div class="field"><label>الموقع</label><input type="text" id="m_loc"></div>
-            <div class="field full-width"><label>وصف العمل</label><textarea id="m_desc" rows="2" placeholder="اشرح الإجراء الذي تم تنفيذه..."></textarea></div>
+        <div class="section">
+            <div class="section-header">🧪 جودة المياه (Product Water)</div>
+            <div class="grid">
+                <div class="field"><label>Temp</label><input type="number" step="0.1" id="q_temp"></div>
+                <div class="field"><label>Turbidity</label><input type="number" step="0.1" id="q_turb"></div>
+                <div class="field"><label>Free Chlorine</label><input type="number" step="0.1" id="q_cl"></div>
+                <div class="field"><label>pH</label><input type="number" step="0.1" id="q_ph"></div>
+                <div class="field"><label>Conductivity</label><input type="number" id="q_cond"></div>
+                <div class="field"><label>TDS</label><input type="number" id="q_tds"></div>
+            </div>
         </div>
-    </div>
 
-    <button class="btn-export" onclick="exportFullReport()">📦 تصدير التقرير الشامل (Excel)</button>
+        <div class="section">
+            <div class="section-header">🛠️ تقرير الصيانة</div>
+            <div class="grid">
+                <div class="field"><label>المعدة</label><input type="text" id="m_equip"></div>
+                <div class="field"><label>الموقع</label><input type="text" id="m_loc"></div>
+                <div class="field full-width"><label>وصف العمل</label><textarea id="m_desc" rows="2"></textarea></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="toolbar">
+    <button class="btn-reset" onclick="resetData()">🗑️ مسح</button>
+    <button class="btn-save" onclick="saveToDevice()">💾 حفظ التعديلات</button>
+    <button class="btn-export" onclick="exportExcel()">📊 تصدير Excel</button>
 </div>
 
 <script>
-    document.getElementById('reportDate').valueAsDate = new Date();
+    // عند تحميل الصفحة، استرجع البيانات المحفوظة إن وجدت
+    window.onload = function() {
+        document.getElementById('reportDate').valueAsDate = new Date();
+        const savedData = localStorage.getItem('alhair_report_draft');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            Object.keys(data).forEach(key => {
+                if(document.getElementById(key)) document.getElementById(key).value = data[key];
+            });
+        }
+    };
 
-    function exportFullReport() {
+    // حفظ التعديلات في ذاكرة الجهاز (المتصفح)
+    function saveToDevice() {
+        const formData = {};
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => formData[input.id] = input.value);
+        localStorage.setItem('alhair_report_draft', JSON.stringify(formData));
+        alert('✅ تم حفظ التعديلات بنجاح في متصفحك');
+    }
+
+    function resetData() {
+        if(confirm('هل تريد مسح جميع الحقول؟')) {
+            localStorage.removeItem('alhair_report_draft');
+            location.reload();
+        }
+    }
+
+    function exportExcel() {
         const date = document.getElementById('reportDate').value;
-        
-        // تجهيز البيانات بشكل جدولي للإكسل
         const reportData = [
-            ["تقرير تشغيل وحدة تنقية الحاير"],
+            ["تقرير وحدة تنقية الحاير اليومي"],
             ["التاريخ:", date],
             [],
-            ["1. مخرجات المحطة", "إنتاج (م3)", "تصدير (م3)", "احتياطي (م3)"],
+            ["الجهة", "إنتاج (م3)", "تصدير (م3)", "احتياطي (م3)"],
             ["الشميسي", document.getElementById('sh_prod').value, document.getElementById('sh_export').value, document.getElementById('sh_spare').value],
             ["منفوحة", document.getElementById('mn_prod').value, document.getElementById('mn_export').value, document.getElementById('mn_spare').value],
             [],
-            ["2. حالة الآبار", "في الخدمة", "خارج الخدمة", "الملاحظات"],
-            ["الآبار الجوفية", document.getElementById('wells_in').value, document.getElementById('wells_out').value, document.getElementById('well_notes').value],
+            ["حالة الآبار", "في الخدمة:", document.getElementById('wells_in').value, "خارج الخدمة:", document.getElementById('wells_out').value],
+            ["ملاحظات الآبار:", document.getElementById('well_notes').value],
             [],
-            ["3. جودة المياه المنتج", "القيمة", "المعيار"],
-            ["Temp", document.getElementById('q_temp').value, "°C"],
-            ["Turbidity", document.getElementById('q_turb').value, "NTU"],
-            ["Free Chlorine", document.getElementById('q_cl').value, "mg/l"],
-            ["pH", document.getElementById('q_ph').value, ""],
-            ["Conductivity", document.getElementById('q_cond').value, "µS/cm"],
-            ["TDS", document.getElementById('q_tds').value, "mg/l"],
+            ["جودة المياه", "القيمة"],
+            ["Temp", document.getElementById('q_temp').value],
+            ["Turbidity", document.getElementById('q_turb').value],
+            ["Free Chlorine", document.getElementById('q_cl').value],
+            ["pH", document.getElementById('q_ph').value],
+            ["Conductivity", document.getElementById('q_cond').value],
+            ["TDS", document.getElementById('q_tds').value],
             [],
-            ["4. تقرير الصيانة", "المعدة", "الموقع", "وصف العمل"],
-            ["الإجراءات المتخذة", document.getElementById('m_equip').value, document.getElementById('m_loc').value, document.getElementById('m_desc').value]
+            ["تقرير الصيانة", "المعدة", "الموقع", "وصف العمل"],
+            ["", document.getElementById('m_equip').value, document.getElementById('m_loc').value, document.getElementById('m_desc').value]
         ];
 
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.aoa_to_sheet(reportData);
-        ws['!dir'] = "rtl"; // من اليمين لليسار
-
-        XLSX.utils.book_append_sheet(wb, ws, "التقرير الشامل");
+        ws['!dir'] = "rtl";
+        XLSX.utils.book_append_sheet(wb, ws, "التقرير");
         XLSX.writeFile(wb, `تقرير_الحاير_${date}.xlsx`);
     }
 </script>
