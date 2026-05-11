@@ -1,176 +1,1259 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تقرير محطة الحاير - تحديث معد التقرير</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f4f8; padding: 10px; margin: 0; padding-bottom: 80px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { color: #0D47A1; text-align: center; font-size: 1.4em; margin-bottom: 15px; border-bottom: 2px solid #0D47A1; padding-bottom: 10px; }
-        .section { border: 1px solid #bbdefb; border-radius: 8px; padding: 12px; margin-bottom: 15px; background: #fff; }
-        .section-header { background-color: #0D47A1; color: white; padding: 8px 12px; border-radius: 6px; margin: -12px -12px 12px -12px; font-weight: bold; font-size: 0.9em; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-        .field { display: flex; flex-direction: column; }
-        label { font-size: 0.75em; color: #1565C0; margin-bottom: 3px; font-weight: bold; }
-        input, textarea { padding: 10px; border: 1px solid #90caf9; border-radius: 6px; font-size: 15px; background-color: #fdfdfd; }
-        .readonly-field { background-color: #f1f3f4 !important; color: #5f6368; border: 1px solid #dadce0; font-weight: bold; cursor: not-allowed; }
-        .full-width { grid-column: 1 / -1; }
-        
-        .toolbar { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; padding: 8px; display: flex; gap: 5px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid #ddd; }
-        button { flex: 1; padding: 8px 2px; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
-        .btn-save { background-color: #007bff; color: white; }
-        .btn-export { background-color: #2E7D32; color: white; }
-        .btn-reset { background-color: #f8f9fa; color: #dc3545; border: 1px solid #dc3545; flex: 0.4; }
-        .icon { font-size: 14px; }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>نظام تقارير التشغيل اليومي - الهيئة السعودية للمياه</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+<style>
+/* ============================================================
+   SCREEN STYLES
+============================================================ */
+:root{
+  --blue:#1a4f8a;
+  --blue-mid:#2e6db4;
+  --blue-header:#1e5a9e;
+  --blue-row:#cce0f5;
+  --blue-dark:#0d3a6e;
+}
+*{box-sizing:border-box;}
+body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size:13px;}
+
+.top-nav{background:linear-gradient(135deg,var(--blue-dark),var(--blue-mid));color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,.3);}
+.top-nav .logo{display:flex;align-items:center;gap:10px;}
+.nav-icon{width:42px;height:42px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:1.3rem;}
+.top-nav h1{margin:0;font-size:1rem;font-weight:700;}
+.top-nav p{margin:0;font-size:.73rem;opacity:.85;}
+
+.tab-bar{background:#fff;border-bottom:3px solid var(--blue);display:flex;gap:4px;padding:8px 16px 0;overflow-x:auto;}
+.tab-btn{padding:8px 18px;border:none;background:#e0eaf5;border-radius:8px 8px 0 0;font-weight:600;font-size:.82rem;color:var(--blue);cursor:pointer;white-space:nowrap;transition:.2s;}
+.tab-btn.active{background:var(--blue);color:#fff;}
+
+.screen-card{background:#fff;border-radius:10px;box-shadow:0 3px 15px rgba(0,0,0,.1);overflow:hidden;margin-bottom:16px;}
+.s-sec{background:var(--blue-header);color:#fff;text-align:center;font-weight:700;padding:7px;font-size:.88rem;}
+.s-card-body{padding:12px;}
+
+.form-control,.form-select{font-size:.82rem;border:1.5px solid #b0c8e0;border-radius:6px;}
+.form-control:focus,.form-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,79,138,.15);}
+.form-label{font-size:.77rem;font-weight:700;color:var(--blue);margin-bottom:3px;}
+
+.scr-table{width:100%;border-collapse:collapse;}
+.scr-table th{background:var(--blue-header);color:#fff;text-align:center;padding:5px 3px;border:1px solid #6a9fd0;font-size:.74rem;font-weight:600;}
+.scr-table td{border:1px solid #b0c8e0;padding:4px 3px;text-align:center;vertical-align:middle;font-size:.77rem;}
+.scr-table tr:nth-child(even) td{background:#eaf2fc;}
+.lbl-td{background:var(--blue-row)!important;font-weight:700;font-size:.74rem;color:#0d3a6e;}
+.ic input,.ic select{width:100%;border:none;background:transparent;text-align:center;font-size:.75rem;outline:none;padding:2px;}
+.ic{padding:2px!important;}
+.ic input:focus{background:#fffde7;}
+
+.btn-swa{background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:#fff;border:none;border-radius:8px;padding:9px 22px;font-weight:700;font-size:.85rem;transition:.2s;cursor:pointer;}
+.btn-swa:hover{filter:brightness(1.12);color:#fff;}
+.btn-grn{background:linear-gradient(135deg,#198754,#28a745);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-weight:700;font-size:.85rem;cursor:pointer;}
+.btn-red{background:linear-gradient(135deg,#dc3545,#b02a37);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:600;font-size:.8rem;cursor:pointer;}
+
+.tab-page{display:none;}
+.tab-page.active{display:block;}
+
+.rec-item{border:1px solid #c8daf0;border-radius:8px;padding:10px 14px;margin-bottom:8px;background:#f5f9ff;}
+.rec-item:hover{border-color:var(--blue);background:#eaf2ff;}
+.rec-date{font-weight:700;color:var(--blue);font-size:.85rem;}
+
+.stat-box{border-radius:10px;padding:14px;text-align:center;color:#fff;}
+.stat-box .sn{font-size:1.7rem;font-weight:800;}
+.stat-box .sl{font-size:.72rem;opacity:.85;}
+
+.modal-hdr-swa{background:var(--blue);color:#fff;}
+.badge-ok{background:#d1fae5;color:#065f46;padding:2px 10px;border-radius:99px;font-size:.72rem;font-weight:700;}
+.badge-warn{background:#fef3c7;color:#92400e;padding:2px 10px;border-radius:99px;font-size:.72rem;font-weight:700;}
+.badge-ng{background:#fee2e2;color:#991b1b;padding:2px 10px;border-radius:99px;font-size:.72rem;font-weight:700;}
+.limit-ok{color:#198754;font-weight:700;}
+.limit-ng{color:#dc3545;font-weight:700;}
+.limit-warn{color:#e67e00;font-weight:700;}
+
+#toastZone{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;}
+
+/* ============================================================
+   PRINT STYLES  – A4 Portrait مطابق للتقرير الأصلي
+============================================================ */
+@media print {
+  @page{
+    size: A4 portrait;
+    margin: 8mm 7mm 8mm 7mm;
+  }
+
+  /* إخفاء واجهة النظام */
+  .top-nav,.tab-bar,.no-print,
+  .tab-page:not(.active) { display:none!important; }
+
+  body{
+    background:#fff!important;
+    font-family: Arial, 'Segoe UI', Tahoma, sans-serif;
+    font-size:8pt;
+    color:#000;
+    margin:0; padding:0;
+  }
+
+  /* إظهار ورقة الطباعة بدلاً من شاشة الإدخال */
+  #form-tab{ display:none!important; }
+  #print-page{ display:block!important; }
+
+  .print-page{
+    width:100%;
+    page-break-after: always;
+  }
+
+  /* ===== جدول الطباعة ===== */
+  .pt{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+  }
+  .pt td, .pt th{
+    border:1px solid #2e6db4;
+    padding:2pt 3pt;
+    vertical-align:middle;
+    text-align:center;
+    font-size:7.5pt;
+    line-height:1.3;
+  }
+
+  /* رأس أزرق غامق */
+  .ph{
+    background:#1e5a9e!important;
+    color:#fff!important;
+    font-weight:700;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  /* رأس أزرق فاتح للأعمدة الفرعية */
+  .psh{
+    background:#2e6db4!important;
+    color:#fff!important;
+    font-weight:700;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  /* خلية عنوان صف */
+  .plbl{
+    background:#cce0f5!important;
+    font-weight:700;
+    color:#0d3a6e!important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  /* خلية بيانات */
+  .pval{ background:#fff!important; }
+  /* خلية بيانات زرقاء فاتحة (صف زوجي) */
+  .pval2{ background:#eaf4ff!important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+  /* عنوان القسم الرئيسي */
+  .psec{
+    background:#1e5a9e!important;
+    color:#fff!important;
+    text-align:center;
+    font-weight:700;
+    font-size:9pt;
+    padding:3pt;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  /* شعار الهيئة */
+  .logo-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:3pt;
+    border-bottom:2pt solid #1e5a9e;
+    padding-bottom:3pt;
+  }
+  .logo-ar{font-size:11pt;font-weight:900;color:#1e5a9e;}
+  .logo-en{font-size:7pt;color:#2e6db4;}
+  .logo-icon-p{
+    width:40pt;height:40pt;
+    background:#1e5a9e!important;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff!important;font-size:18pt;font-weight:900;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .report-title-p{font-size:13pt;font-weight:900;color:#1e5a9e;text-align:center;}
+
+  /* توقيعات */
+  .sig-box{border:1px solid #2e6db4;padding:4pt;min-height:35pt;text-align:center;}
+  .sig-lbl{font-size:7pt;color:#1e5a9e;font-weight:700;border-bottom:1px solid #ccc;padding-bottom:2pt;margin-bottom:2pt;}
+  .sig-name{font-size:8pt;font-weight:700;}
+  .sig-line{border-top:1px solid #999;margin-top:18pt;}
+}
+
+/* إخفاء صفحة الطباعة في الشاشة */
+#print-page{ display:none; }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h2>تقرير تشغيل محطة الحاير</h2>
-
-    <form id="mainForm">
-        <div class="section">
-            <div class="section-header">📍 البيانات العامة</div>
-            <div class="grid">
-                <div class="field"><label>التاريخ</label><input type="date" id="reportDate"></div>
-                <div class="field"><label>الاستهلاك (MW/DAY)</label><input type="number" id="power"></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">💧 مخرجات محطة الحاير</div>
-            <div class="grid">
-                <div class="field"><label>السعة التشغيلية</label><input type="number" id="h_capacity" value="50000" class="readonly-field" readonly></div>
-                <div class="field"><label>كمية الإنتاج (م3)</label><input type="number" id="h_prod" oninput="calculateSpare()"></div>
-                <div class="field"><label>إنتاج احتياطي (تلقائي)</label><input type="number" id="h_spare" class="readonly-field" readonly></div>
-                <div class="field"><label>كمية التصدير (م3)</label><input type="number" id="h_export"></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">🚜 حالة الآبار</div>
-            <div class="grid">
-                <div class="field"><label>آبار في الخدمة</label><input type="number" id="wells_in"></div>
-                <div class="field"><label>آبار خارج الخدمة</label><input type="number" id="wells_out"></div>
-                <div class="field full-width"><label>ملاحظات الآبار</label><textarea id="well_notes" rows="2"></textarea></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">🧪 جودة المياه</div>
-            <div class="grid">
-                <div class="field"><label>Temp</label><input type="number" step="0.1" id="q_temp"></div>
-                <div class="field"><label>Turbidity</label><input type="number" step="0.1" id="q_turb"></div>
-                <div class="field"><label>Free Cl</label><input type="number" step="0.1" id="q_cl"></div>
-                <div class="field"><label>pH</label><input type="number" step="0.1" id="q_ph"></div>
-                <div class="field"><label>Cond.</label><input type="number" id="q_cond"></div>
-                <div class="field"><label>TDS</label><input type="number" id="q_tds"></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">🛠️ تقرير الصيانة</div>
-            <div class="grid">
-                <div class="field"><label>المعدة</label><input type="text" id="m_equip"></div>
-                <div class="field"><label>الموقع</label><input type="text" id="m_loc"></div>
-                <div class="field full-width"><label>وصف العمل</label><textarea id="m_desc" rows="2"></textarea></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">👤 التوقيع</div>
-            <div class="grid">
-                <div class="field full-width">
-                    <label>معد التقرير</label>
-                    <input type="text" id="reporter_name" placeholder="أدخل اسمك هنا">
-                </div>
-            </div>
-        </div>
-    </form>
+<!-- ===================================================
+     TOP NAV
+=================================================== -->
+<div class="top-nav no-print">
+  <div class="logo">
+    <div class="nav-icon"><i class="bi bi-droplet-fill"></i></div>
+    <div>
+      <h1>نظام تقارير التشغيل اليومي</h1>
+      <p>الهيئة السعودية للمياه – قطاع الأوسط – الرياض</p>
+    </div>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <span class="badge bg-success fs-6" style="font-size:.7rem!important"><i class="bi bi-circle-fill me-1" style="font-size:.4rem"></i>نشط</span>
+    <button class="btn btn-warning btn-sm fw-bold" onclick="printReport()"><i class="bi bi-printer-fill me-1"></i>طباعة A4</button>
+  </div>
 </div>
 
-<div class="toolbar">
-    <button class="btn-reset" onclick="resetData()"><span class="icon">🗑️</span><span>مسح</span></button>
-    <button class="btn-save" onclick="saveToDevice()"><span class="icon">💾</span><span>حفظ</span></button>
-    <button class="btn-export" onclick="exportExcel()"><span class="icon">📊</span><span>تصدير Excel</span></button>
+<!-- ===================================================
+     TAB BAR
+=================================================== -->
+<div class="tab-bar no-print">
+  <button class="tab-btn active" onclick="showTab('form-tab',this)"><i class="bi bi-pencil-square me-1"></i>إدخال التقرير</button>
+  <button class="tab-btn" onclick="showTab('records-tab',this)"><i class="bi bi-archive me-1"></i>سجل التقارير</button>
+  <button class="tab-btn" onclick="showTab('stats-tab',this)"><i class="bi bi-bar-chart-fill me-1"></i>إحصائيات</button>
 </div>
 
+<div class="container-fluid p-3" style="max-width:1200px">
+
+<!-- ===================================================
+     TAB 1: FORM INPUT
+=================================================== -->
+<div id="form-tab" class="tab-page active">
+
+  <!-- Section: Station Info -->
+  <div class="screen-card">
+    <div class="s-sec">معلومات المحطة</div>
+    <div class="s-card-body">
+      <div class="row g-2 mb-2">
+        <div class="col-md-3"><label class="form-label">اليوم</label>
+          <select class="form-select" id="dayName">
+            <option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option>
+            <option>الأربعاء</option><option>الخميس</option><option>الجمعة</option><option>السبت</option>
+          </select></div>
+        <div class="col-md-3"><label class="form-label">التاريخ الميلادي</label>
+          <input type="date" class="form-control" id="dateGreg"/></div>
+        <div class="col-md-3"><label class="form-label">التاريخ الهجري</label>
+          <input type="text" class="form-control" id="dateHijri" placeholder="مثال: 26-11-1445"/></div>
+        <div class="col-md-3"><label class="form-label">الشركة المشغّلة</label>
+          <input type="text" class="form-control" id="opCompany" placeholder="NWC"/></div>
+      </div>
+      <div class="row g-2 mb-2">
+        <div class="col-md-2"><label class="form-label">المدينة</label>
+          <input type="text" class="form-control" id="city" value="الرياض"/></div>
+        <div class="col-md-2"><label class="form-label">القطاع</label>
+          <input type="text" class="form-control" id="sector" value="الأوسط"/></div>
+        <div class="col-md-3"><label class="form-label">المحطة</label>
+          <input type="text" class="form-control" id="station" placeholder="الخير"/></div>
+        <div class="col-md-3"><label class="form-label">الجهة المستفيدة</label>
+          <input type="text" class="form-control" id="beneficiary" placeholder="الشميسي – منفوحة"/></div>
+        <div class="col-md-2"><label class="form-label">مصدر المياه</label>
+          <select class="form-select" id="waterSource">
+            <option>مياه جوفية</option><option>تحلية</option><option>سطحية</option><option>معالجة</option>
+          </select></div>
+      </div>
+      <div class="row g-2">
+        <div class="col-md-2"><label class="form-label">الإنتاج التصميمي (م³/يوم)</label>
+          <input type="number" class="form-control" id="designProd" placeholder="50000"/></div>
+        <div class="col-md-2"><label class="form-label">آلية التشغيل</label>
+          <select class="form-select" id="opMode"><option>ذاتي</option><option>شركة</option><option>مشترك</option></select></div>
+        <div class="col-md-2"><label class="form-label">عدد الآبار الكلي</label>
+          <input type="number" class="form-control" id="totalWells" placeholder="16"/></div>
+        <div class="col-md-2"><label class="form-label">آبار في الخدمة</label>
+          <input type="number" class="form-control" id="activeWells" placeholder="15"/></div>
+        <div class="col-md-2"><label class="form-label">الإنتاج العكسي (م³)</label>
+          <input type="number" class="form-control" id="reverseOsmosis" placeholder=""/></div>
+        <div class="col-md-2"><label class="form-label">الاستهلاك الكهربائي (KW/DAY)</label>
+          <input type="number" class="form-control" id="kwDay" placeholder="90"/></div>
+      </div>
+      <div class="row g-2 mt-1">
+        <div class="col-12"><label class="form-label">أرقام الآبار في الخدمة</label>
+          <input type="text" class="form-control" id="wellNumbers" placeholder="92,93,94,95,96,99,100,101"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Production -->
+  <div class="screen-card">
+    <div class="s-sec">الإنتاج</div>
+    <div class="s-card-body p-0">
+      <table class="scr-table">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width:8%">الإنتاج</th>
+            <th colspan="2">طبيعي (م³/يوم)</th>
+            <th colspan="2">منخفض</th>
+            <th>سبب الانخفاض</th>
+            <th colspan="2">التصدير HPP</th>
+            <th colspan="3">مضخات الرفع</th>
+          </tr>
+          <tr>
+            <th>الكمية</th><th>نعم/لا</th>
+            <th>الكمية</th><th>نعم/لا</th>
+            <th>السبب</th>
+            <th>الكمية م³</th><th>معدل م³/س</th>
+            <th>عدد المضخات</th><th>في الخدمة</th><th>معدل الضخ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="lbl-td fw-bold">نساح</td>
+            <td class="ic"><input type="number" id="nasah_nat" placeholder="23542"/></td>
+            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
+            <td class="ic"><input type="number" id="nasah_low"/></td>
+            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
+            <td class="ic"><input type="text" id="nasah_reason"/></td>
+            <td class="ic"><input type="number" id="nasah_hpp_qty" placeholder="21496"/></td>
+            <td class="ic"><input type="number" id="nasah_hpp_rate" placeholder="896"/></td>
+            <td class="ic"><input type="number" id="nasah_pump_total" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="nasah_pump_active" placeholder="2"/></td>
+            <td class="ic"><input type="number" id="nasah_pump_rate"/></td>
+          </tr>
+          <tr>
+            <td class="lbl-td fw-bold">منفوحة</td>
+            <td class="ic"><input type="number" id="manf_nat" placeholder="22851"/></td>
+            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
+            <td class="ic"><input type="number" id="manf_low"/></td>
+            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
+            <td class="ic"><input type="text" id="manf_reason"/></td>
+            <td class="ic"><input type="number" id="manf_hpp_qty" placeholder="22851"/></td>
+            <td class="ic"><input type="number" id="manf_hpp_rate" placeholder="952"/></td>
+            <td class="ic"><input type="number" id="manf_pump_total" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="manf_pump_active" placeholder="2"/></td>
+            <td class="ic"><input type="number" id="manf_pump_rate"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section: Out of Service Equipment -->
+  <div class="screen-card">
+    <div class="s-sec">معدات التشغيل الخارجة عن الخدمة</div>
+    <div class="s-card-body p-0">
+      <table class="scr-table">
+        <thead>
+          <tr>
+            <th style="width:12%">البيان</th>
+            <th>مضخات الرفع</th>
+            <th>المحولات</th>
+            <th>مضخات تجريع الكلور</th>
+            <th>بادئ تشغيل</th>
+            <th>مولدات ديزل – عدد</th>
+            <th>شركة الكهرباء</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="lbl-td">الموقع</td>
+            <td class="ic"><input type="text" id="eq_lift_loc" placeholder="مبنى المضخات"/></td>
+            <td class="ic"><input type="text" id="eq_trans_loc" placeholder="المحطة"/></td>
+            <td class="ic"><input type="text" id="eq_chlor_loc" placeholder="مبنى الكلور"/></td>
+            <td class="ic"><input type="text" id="eq_start_loc"/></td>
+            <td class="ic"><input type="text" id="eq_gen_loc"/></td>
+            <td class="ic"><input type="text" id="eq_elec_loc" placeholder="لدى الشركة"/></td>
+          </tr>
+          <tr><td class="lbl-td">العدد</td>
+            <td class="ic"><input type="number" id="eq_lift_total" placeholder="8"/></td>
+            <td class="ic"><input type="number" id="eq_trans_total" placeholder="6"/></td>
+            <td class="ic"><input type="number" id="eq_chlor_total" placeholder="2"/></td>
+            <td class="ic"><input type="number" id="eq_start_total" placeholder="8"/></td>
+            <td class="ic"><input type="number" id="eq_gen_total"/></td>
+            <td class="ic"><input type="text" id="eq_elec_total"/></td>
+          </tr>
+          <tr><td class="lbl-td">في الخدمة</td>
+            <td class="ic"><input type="number" id="eq_lift_active" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="eq_trans_active" placeholder="3"/></td>
+            <td class="ic"><input type="number" id="eq_chlor_active" placeholder="1"/></td>
+            <td class="ic"><input type="number" id="eq_start_active" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="eq_gen_active"/></td>
+            <td class="ic"><input type="text" id="eq_elec_active"/></td>
+          </tr>
+          <tr><td class="lbl-td">خارج الخدمة</td>
+            <td class="ic"><input type="number" id="eq_lift_out" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="eq_trans_out" placeholder="3"/></td>
+            <td class="ic"><input type="number" id="eq_chlor_out" placeholder="1"/></td>
+            <td class="ic"><input type="number" id="eq_start_out" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="eq_gen_out"/></td>
+            <td class="ic"><input type="text" id="eq_elec_out"/></td>
+          </tr>
+          <tr><td class="lbl-td">السبب</td>
+            <td class="ic"><input type="text" id="eq_lift_reason" placeholder="احتياطية"/></td>
+            <td class="ic"><input type="text" id="eq_trans_reason" placeholder="احتياطية"/></td>
+            <td class="ic"><input type="text" id="eq_chlor_reason" placeholder="احتياطية"/></td>
+            <td class="ic"><input type="text" id="eq_start_reason" placeholder="احتياطية"/></td>
+            <td class="ic"><input type="text" id="eq_gen_reason"/></td>
+            <td class="ic"><input type="text" id="eq_elec_reason" placeholder="عطل كهربائي"/></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="p-2">
+        <label class="form-label">ملاحظات التشغيل</label>
+        <textarea class="form-control" id="opNotes" rows="2"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Maintenance -->
+  <div class="screen-card">
+    <div class="s-sec">تقرير الصيانة</div>
+    <div class="s-card-body p-0">
+      <table class="scr-table" id="maintTable">
+        <thead>
+          <tr>
+            <th style="width:4%">#</th>
+            <th style="width:12%">نوع الصيانة</th>
+            <th style="width:16%">اسم المعدة</th>
+            <th style="width:12%">الموقع</th>
+            <th>وصف العمل</th>
+            <th style="width:18%">ملاحظات</th>
+            <th style="width:4%" class="no-print"></th>
+          </tr>
+        </thead>
+        <tbody id="maintBody">
+          <tr>
+            <td>1</td>
+            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>وقائية</option><option>تصحيحية</option><option>طارئة</option></select></td>
+            <td class="ic"><input type="text" placeholder="المضخختين (6,7)" style="width:100%"/></td>
+            <td class="ic"><input type="text" placeholder="المحطة" style="width:100%"/></td>
+            <td class="ic"><input type="text" placeholder="تشييك وتغيير زيت (التشغيل الطبيعي، تشحيم، الاهتزازات، النظافة)" style="width:100%"/></td>
+            <td class="ic"><input type="text" style="width:100%"/></td>
+            <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="removeMaintRow(this)"><i class="bi bi-trash3"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="p-2 no-print">
+        <button class="btn-swa btn btn-sm" onclick="addMaintRow()"><i class="bi bi-plus-circle me-1"></i>إضافة سطر</button>
+      </div>
+      <div class="p-2">
+        <label class="form-label">ملاحظات الصيانة</label>
+        <textarea class="form-control" id="maintNotes" rows="2"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section: Water Quality -->
+  <div class="screen-card">
+    <div class="s-sec">تقرير جودة المياه – Physical Analysis</div>
+    <div class="s-card-body p-0">
+      <table class="scr-table">
+        <thead>
+          <tr>
+            <th style="width:12%">Sampling Point</th>
+            <th>Time<br/>Hrs.</th>
+            <th>Temp.<br/>°C</th>
+            <th>Turbidity<br/>NTU</th>
+            <th>Free Chlorine<br/>mg/l</th>
+            <th>pH</th>
+            <th>Conductivity<br/>µs/cm</th>
+            <th>TDS<br/>mg/l</th>
+            <th>T.Iron<br/>mg/l</th>
+            <th>الملاحظات</th>
+          </tr>
+          <tr style="background:#1565a0;color:#fff;font-size:.7rem">
+            <td style="background:#1565a0;color:#fff;font-weight:700">MEWA-2021 Std.</td>
+            <td style="background:#1565a0;color:#fff">——</td>
+            <td style="background:#1565a0;color:#fff">Max. 40</td>
+            <td style="background:#1565a0;color:#fff">Max. 5</td>
+            <td style="background:#1565a0;color:#fff">0.2 – 0.5</td>
+            <td style="background:#1565a0;color:#fff">6.5 – 8.5</td>
+            <td style="background:#1565a0;color:#fff">——</td>
+            <td style="background:#1565a0;color:#fff">100 – 1000</td>
+            <td style="background:#1565a0;color:#fff">Max. 0.3</td>
+            <td style="background:#1565a0;color:#fff">——</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="lbl-td">Raw water</td>
+            <td class="ic"><input type="time" id="q_raw_time"/></td>
+            <td class="ic"><input type="number" step="0.1" id="q_raw_temp" placeholder="28"/></td>
+            <td class="ic"><input type="number" step="0.01" id="q_raw_turb" placeholder="0.33"/></td>
+            <td class="ic"><input type="text" id="q_raw_cl" placeholder="&lt;0.36"/></td>
+            <td class="ic"><input type="number" step="0.1" id="q_raw_ph" placeholder="7.6"/></td>
+            <td class="ic"><input type="number" id="q_raw_cond" placeholder="766"/></td>
+            <td class="ic"><input type="number" id="q_raw_tds" placeholder="560"/></td>
+            <td class="ic"><input type="number" step="0.01" id="q_raw_iron"/></td>
+            <td class="ic"><input type="text" id="q_raw_notes"/></td>
+          </tr>
+          <tr>
+            <td class="lbl-td">Product Water</td>
+            <td class="ic"><input type="time" id="q_prod_time"/></td>
+            <td class="ic"><input type="number" step="0.1" id="q_prod_temp"/></td>
+            <td class="ic"><input type="number" step="0.01" id="q_prod_turb"/></td>
+            <td class="ic"><input type="text" id="q_prod_cl"/></td>
+            <td class="ic"><input type="number" step="0.1" id="q_prod_ph"/></td>
+            <td class="ic"><input type="number" id="q_prod_cond"/></td>
+            <td class="ic"><input type="number" id="q_prod_tds"/></td>
+            <td class="ic"><input type="number" step="0.01" id="q_prod_iron"/></td>
+            <td class="ic"><input type="text" id="q_prod_notes"/></td>
+          </tr>
+          <tr>
+            <td class="lbl-td">Rejected Water</td>
+            <td class="ic"><input type="time" id="q_rej_time"/></td>
+            <td class="ic"><input type="number" step="0.1" id="q_rej_temp"/></td>
+            <td class="ic"><input type="number" step="0.01" id="q_rej_turb"/></td>
+            <td class="ic"><input type="text" id="q_rej_cl"/></td>
+            <td class="ic"><input type="number" step="0.1" id="q_rej_ph"/></td>
+            <td class="ic"><input type="number" id="q_rej_cond"/></td>
+            <td class="ic"><input type="number" id="q_rej_tds"/></td>
+            <td class="ic"><input type="number" step="0.01" id="q_rej_iron"/></td>
+            <td class="ic"><input type="text" id="q_rej_notes"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section: Approval -->
+  <div class="screen-card">
+    <div class="s-sec">الاعتماد</div>
+    <div class="s-card-body">
+      <div class="row g-3">
+        <div class="col-md-3"><label class="form-label">المعتمد</label>
+          <input type="text" class="form-control" id="approver"/></div>
+        <div class="col-md-3"><label class="form-label">المراقب</label>
+          <input type="text" class="form-control" id="supervisor" placeholder="ناصر الدوسري"/></div>
+        <div class="col-md-3"><label class="form-label">مشرف المياه الوطنية</label>
+          <input type="text" class="form-control" id="nwcSupervisor" placeholder="عبدالله المطيري"/></div>
+        <div class="col-md-3"><label class="form-label">مشرف المؤسسة العامة لتحلية المياه</label>
+          <input type="text" class="form-control" id="salineSupervisor"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="d-flex gap-3 mb-4 no-print flex-wrap">
+    <button class="btn-swa btn" onclick="saveReport()"><i class="bi bi-save-fill me-2"></i>حفظ التقرير</button>
+    <button class="btn-grn btn" onclick="printReport()"><i class="bi bi-printer-fill me-2"></i>طباعة A4</button>
+    <button class="btn btn-outline-secondary" onclick="clearForm()"><i class="bi bi-arrow-counterclockwise me-2"></i>مسح النموذج</button>
+  </div>
+
+</div><!-- /form-tab -->
+
+<!-- ===================================================
+     TAB 2: RECORDS
+=================================================== -->
+<div id="records-tab" class="tab-page">
+  <div class="screen-card">
+    <div style="background:var(--blue);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;">
+      <span class="fw-bold"><i class="bi bi-archive-fill me-2"></i>سجل التقارير المحفوظة</span>
+      <div class="d-flex gap-2">
+        <input type="text" id="searchRec" class="form-control form-control-sm" placeholder="🔍 بحث..." style="width:160px" oninput="renderRecords()"/>
+        <button class="btn btn-danger btn-sm fw-bold" onclick="clearAllRecords()"><i class="bi bi-trash3"></i> مسح الكل</button>
+      </div>
+    </div>
+    <div class="p-3" id="recordsList"></div>
+  </div>
+</div>
+
+<!-- ===================================================
+     TAB 3: STATS
+=================================================== -->
+<div id="stats-tab" class="tab-page">
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-6"><div class="stat-box" style="background:linear-gradient(135deg,#1a4f8a,#2e6db4)"><div class="sn" id="s_total">0</div><div class="sl">إجمالي التقارير</div></div></div>
+    <div class="col-md-3 col-6"><div class="stat-box" style="background:linear-gradient(135deg,#198754,#28a745)"><div class="sn" id="s_prod">0</div><div class="sl">متوسط الإنتاج (م³)</div></div></div>
+    <div class="col-md-3 col-6"><div class="stat-box" style="background:linear-gradient(135deg,#fd7e14,#e96b00)"><div class="sn" id="s_maint">0</div><div class="sl">إجمالي أعمال الصيانة</div></div></div>
+    <div class="col-md-3 col-6"><div class="stat-box" style="background:linear-gradient(135deg,#0dcaf0,#0ba6c8)"><div class="sn" id="s_ph">—</div><div class="sl">متوسط pH</div></div></div>
+  </div>
+  <div class="screen-card">
+    <div class="s-sec">مراقبة جودة المياه – آخر 10 تقارير</div>
+    <div class="p-0">
+      <div class="table-responsive">
+        <table class="scr-table">
+          <thead><tr><th>التاريخ</th><th>Temp °C</th><th>Turbidity NTU</th><th>Free Cl mg/l</th><th>pH</th><th>TDS mg/l</th><th>T.Iron mg/l</th><th>الحالة</th></tr></thead>
+          <tbody id="statsQBody"><tr><td colspan="8" class="text-muted text-center py-3">لا توجد بيانات</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- ===================================================
+     PRINT PAGE  (hidden on screen, shown only on print)
+=================================================== -->
+<div id="print-page">
+  <!-- populated by JS before printing -->
+</div>
+
+<!-- View Modal -->
+<div class="modal fade" id="viewModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header modal-hdr-swa">
+        <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-text me-2"></i>تفاصيل التقرير</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toastZone"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    function calculateSpare() {
-        const capacity = 50000;
-        const production = parseFloat(document.getElementById('h_prod').value) || 0;
-        document.getElementById('h_spare').value = production - capacity;
-    }
+/* ============================================================
+   DATA LAYER
+============================================================ */
+let records = JSON.parse(localStorage.getItem('swa_reports_v2') || '[]');
+function saveDB(){ localStorage.setItem('swa_reports_v2', JSON.stringify(records)); }
 
-    window.onload = function() {
-        document.getElementById('reportDate').valueAsDate = new Date();
-        const savedData = localStorage.getItem('alhair_v10_data');
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            Object.keys(data).forEach(key => {
-                if(key !== 'reportDate' && document.getElementById(key)) document.getElementById(key).value = data[key];
-            });
-            calculateSpare();
-        }
-    };
+/* ============================================================
+   HELPERS
+============================================================ */
+function gv(id){ const el=document.getElementById(id); return el ? el.value.trim() : ''; }
+function sv(id,v){ const el=document.getElementById(id); if(el) el.value=v||''; }
 
-    function saveToDevice() {
-        const formData = {};
-        document.querySelectorAll('input, textarea').forEach(input => formData[input.id] = input.value);
-        localStorage.setItem('alhair_v10_data', JSON.stringify(formData));
-        alert('✅ تم حفظ البيانات في المتصفح');
-    }
+function toast(msg, type='success'){
+  const colors={success:'#198754',danger:'#dc3545',info:'#0d6efd'};
+  const d=document.createElement('div');
+  d.style.cssText=`background:${colors[type]};color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;font-size:.85rem;margin-top:8px;box-shadow:0 4px 16px rgba(0,0,0,.2)`;
+  d.textContent=msg;
+  document.getElementById('toastZone').appendChild(d);
+  setTimeout(()=>d.remove(),3500);
+}
 
-    function resetData() {
-        if(confirm('هل تريد مسح جميع البيانات؟')) { localStorage.removeItem('alhair_v10_data'); location.reload(); }
-    }
+function showTab(id,el){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if(id==='records-tab') renderRecords();
+  if(id==='stats-tab') renderStats();
+}
 
-    function exportExcel() {
-        const date = document.getElementById('reportDate').value;
-        const reporter = document.getElementById('reporter_name').value || "غير محدد";
-        const wb = XLSX.utils.book_new();
-        
-        const data = [
-            ["تقرير تشغيل محطة تنقية الحاير اليومي"],
-            ["التاريخ:", date, "", "الاستهلاك (MW/DAY):", document.getElementById('power').value],
-            [],
-            ["--- مخرجات الإنتاج ---"],
-            ["البيان", "القيمة (م3)"],
-            ["السعة التشغيلية", "50000"],
-            ["كمية الإنتاج اليومي", document.getElementById('h_prod').value],
-            ["الإنتاج الاحتياطي", document.getElementById('h_spare').value],
-            ["كمية التصدير", document.getElementById('h_export').value],
-            [],
-            ["--- حالة الآبار ---"],
-            ["آبار في الخدمة", "آبار خارج الخدمة", "ملاحظات"],
-            [document.getElementById('wells_in').value, document.getElementById('wells_out').value, document.getElementById('well_notes').value],
-            [],
-            ["--- جودة المياه ---"],
-            ["Temp", "Turbidity", "Free Cl", "pH", "Cond.", "TDS"],
-            [
-                document.getElementById('q_temp').value, document.getElementById('q_turb').value, 
-                document.getElementById('q_cl').value, document.getElementById('q_ph').value, 
-                document.getElementById('q_cond').value, document.getElementById('q_tds').value
-            ],
-            [],
-            ["--- تقرير الصيانة ---"],
-            ["المعدة", "الموقع", "الوصف"],
-            [document.getElementById('m_equip').value, document.getElementById('m_loc').value, document.getElementById('m_desc').value],
-            [],
-            ["تم إعداد التقرير بواسطة:", reporter]
-        ];
+/* ============================================================
+   MAINTENANCE ROWS
+============================================================ */
+let maintCount=1;
+function addMaintRow(){
+  maintCount++;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td>${maintCount}</td>
+    <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>وقائية</option><option>تصحيحية</option><option>طارئة</option></select></td>
+    <td class="ic"><input type="text" style="width:100%"/></td>
+    <td class="ic"><input type="text" style="width:100%"/></td>
+    <td class="ic"><input type="text" style="width:100%"/></td>
+    <td class="ic"><input type="text" style="width:100%"/></td>
+    <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="removeMaintRow(this)"><i class="bi bi-trash3"></i></button></td>`;
+  document.getElementById('maintBody').appendChild(tr);
+}
+function removeMaintRow(btn){
+  if(document.querySelectorAll('#maintBody tr').length>1) btn.closest('tr').remove();
+}
 
-        const ws = XLSX.utils.aoa_to_sheet(data);
-        ws['!dir'] = "rtl";
-        ws['!cols'] = [{wch: 25}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15}];
+/* ============================================================
+   COLLECT FORM
+============================================================ */
+function collectForm(){
+  const mRows=[];
+  document.querySelectorAll('#maintBody tr').forEach((tr,i)=>{
+    const cells=tr.querySelectorAll('td');
+    mRows.push({
+      num:i+1,
+      type:cells[1]?.querySelector('select')?.value||'',
+      equip:cells[2]?.querySelector('input')?.value||'',
+      loc:cells[3]?.querySelector('input')?.value||'',
+      work:cells[4]?.querySelector('input')?.value||'',
+      notes:cells[5]?.querySelector('input')?.value||''
+    });
+  });
+  return {
+    id:Date.now(), savedAt:new Date().toISOString(),
+    dayName:gv('dayName'), dateGreg:gv('dateGreg'), dateHijri:gv('dateHijri'),
+    opCompany:gv('opCompany'), city:gv('city'), sector:gv('sector'),
+    station:gv('station'), beneficiary:gv('beneficiary'),
+    waterSource:gv('waterSource'), designProd:gv('designProd'),
+    opMode:gv('opMode'), totalWells:gv('totalWells'), activeWells:gv('activeWells'),
+    wellNumbers:gv('wellNumbers'), kwDay:gv('kwDay'), reverseOsmosis:gv('reverseOsmosis'),
+    nasah_nat:gv('nasah_nat'), nasah_low:gv('nasah_low'), nasah_reason:gv('nasah_reason'),
+    nasah_hpp_qty:gv('nasah_hpp_qty'), nasah_hpp_rate:gv('nasah_hpp_rate'),
+    nasah_pump_total:gv('nasah_pump_total'), nasah_pump_active:gv('nasah_pump_active'),
+    manf_nat:gv('manf_nat'), manf_low:gv('manf_low'), manf_reason:gv('manf_reason'),
+    manf_hpp_qty:gv('manf_hpp_qty'), manf_hpp_rate:gv('manf_hpp_rate'),
+    manf_pump_total:gv('manf_pump_total'), manf_pump_active:gv('manf_pump_active'),
+    eq_lift_loc:gv('eq_lift_loc'), eq_lift_total:gv('eq_lift_total'), eq_lift_active:gv('eq_lift_active'), eq_lift_out:gv('eq_lift_out'), eq_lift_reason:gv('eq_lift_reason'),
+    eq_trans_loc:gv('eq_trans_loc'), eq_trans_total:gv('eq_trans_total'), eq_trans_active:gv('eq_trans_active'), eq_trans_out:gv('eq_trans_out'), eq_trans_reason:gv('eq_trans_reason'),
+    eq_chlor_loc:gv('eq_chlor_loc'), eq_chlor_total:gv('eq_chlor_total'), eq_chlor_active:gv('eq_chlor_active'), eq_chlor_out:gv('eq_chlor_out'), eq_chlor_reason:gv('eq_chlor_reason'),
+    eq_start_loc:gv('eq_start_loc'), eq_start_total:gv('eq_start_total'), eq_start_active:gv('eq_start_active'), eq_start_out:gv('eq_start_out'), eq_start_reason:gv('eq_start_reason'),
+    eq_gen_loc:gv('eq_gen_loc'), eq_gen_total:gv('eq_gen_total'), eq_gen_active:gv('eq_gen_active'), eq_gen_out:gv('eq_gen_out'), eq_gen_reason:gv('eq_gen_reason'),
+    eq_elec_loc:gv('eq_elec_loc'), eq_elec_total:gv('eq_elec_total'), eq_elec_active:gv('eq_elec_active'), eq_elec_out:gv('eq_elec_out'), eq_elec_reason:gv('eq_elec_reason'),
+    opNotes:gv('opNotes'), maintRows:mRows, maintNotes:gv('maintNotes'),
+    q_raw_time:gv('q_raw_time'), q_raw_temp:gv('q_raw_temp'), q_raw_turb:gv('q_raw_turb'),
+    q_raw_cl:gv('q_raw_cl'), q_raw_ph:gv('q_raw_ph'), q_raw_cond:gv('q_raw_cond'),
+    q_raw_tds:gv('q_raw_tds'), q_raw_iron:gv('q_raw_iron'), q_raw_notes:gv('q_raw_notes'),
+    q_prod_time:gv('q_prod_time'), q_prod_temp:gv('q_prod_temp'), q_prod_turb:gv('q_prod_turb'),
+    q_prod_cl:gv('q_prod_cl'), q_prod_ph:gv('q_prod_ph'), q_prod_cond:gv('q_prod_cond'),
+    q_prod_tds:gv('q_prod_tds'), q_prod_iron:gv('q_prod_iron'), q_prod_notes:gv('q_prod_notes'),
+    q_rej_time:gv('q_rej_time'), q_rej_temp:gv('q_rej_temp'), q_rej_turb:gv('q_rej_turb'),
+    q_rej_cl:gv('q_rej_cl'), q_rej_ph:gv('q_rej_ph'), q_rej_cond:gv('q_rej_cond'),
+    q_rej_tds:gv('q_rej_tds'), q_rej_iron:gv('q_rej_iron'), q_rej_notes:gv('q_rej_notes'),
+    approver:gv('approver'), supervisor:gv('supervisor'),
+    nwcSupervisor:gv('nwcSupervisor'), salineSupervisor:gv('salineSupervisor')
+  };
+}
 
-        XLSX.utils.book_append_sheet(wb, ws, "التقرير");
-        XLSX.writeFile(wb, `تقرير_الحاير_${date}.xlsx`);
-    }
+/* ============================================================
+   BUILD PRINT HTML (A4 مطابق للتقرير الأصلي)
+============================================================ */
+function buildPrintHTML(r){
+  const totalProd = (parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0);
+  const totalHPP  = (parseFloat(r.nasah_hpp_qty)||0)+(parseFloat(r.manf_hpp_qty)||0);
+
+  // maintenance rows padding to at least 5 rows
+  const mRows = r.maintRows||[];
+  while(mRows.length < 5) mRows.push({num:mRows.length+1,type:'',equip:'',loc:'',work:'',notes:''});
+
+  // quality sampling rows
+  const qRows=[
+    {lbl:'Raw water / مياه خام', t:r.q_raw_time,temp:r.q_raw_temp,turb:r.q_raw_turb,cl:r.q_raw_cl,ph:r.q_raw_ph,cond:r.q_raw_cond,tds:r.q_raw_tds,iron:r.q_raw_iron,note:r.q_raw_notes},
+    {lbl:'Product Water / مياه منتجة', t:r.q_prod_time,temp:r.q_prod_temp,turb:r.q_prod_turb,cl:r.q_prod_cl,ph:r.q_prod_ph,cond:r.q_prod_cond,tds:r.q_prod_tds,iron:r.q_prod_iron,note:r.q_prod_notes},
+    {lbl:'Rejected Water / مياه مرفوضة', t:r.q_rej_time,temp:r.q_rej_temp,turb:r.q_rej_turb,cl:r.q_rej_cl,ph:r.q_rej_ph,cond:r.q_rej_cond,tds:r.q_rej_tds,iron:r.q_rej_iron,note:r.q_rej_notes},
+    {lbl:''},
+  ];
+
+  const B='#1e5a9e'; // blue header
+  const BL='#2e6db4'; // blue light
+  const BR='#cce0f5'; // blue row bg
+  const W='#ffffff';
+  const AZ='#eaf4ff'; // alternate zebra
+
+  const ph = `
+  font-family: Arial, 'Segoe UI', Tahoma, sans-serif;
+  font-size: 7.5pt;
+  border-collapse: collapse;
+  width: 100%;
+  `;
+
+  const thS=`background:${B};color:#fff;border:1px solid ${BL};padding:3pt 2pt;text-align:center;font-weight:700;font-size:7pt;`;
+  const thLS=`background:${BL};color:#fff;border:1px solid ${BL};padding:2pt 2pt;text-align:center;font-weight:600;font-size:6.5pt;`;
+  const tdS=`border:1px solid ${BL};padding:3pt 2pt;text-align:center;vertical-align:middle;font-size:7pt;`;
+  const tdLbl=`border:1px solid ${BL};padding:3pt 4pt;background:${BR};font-weight:700;font-size:7pt;color:#0d3a6e;`;
+  const secH=`background:${B};color:#fff;text-align:center;font-weight:900;font-size:9pt;padding:4pt;border:1px solid ${B};`;
+  const az=(i)=>i%2===0?W:AZ;
+
+  return `
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Arial,'Segoe UI',Tahoma,sans-serif;font-size:7.5pt;color:#000;background:#fff;}
+  @page{size:A4 portrait;margin:8mm 7mm 8mm 7mm;}
+  table{border-collapse:collapse;width:100%;}
+  .mb2{margin-bottom:3pt;}
+  .sig-line{border-top:1px solid #555;margin-top:20pt;width:80%;margin-left:auto;margin-right:auto;}
+</style>
+</head>
+<body>
+
+<!-- ===================== PAGE 1 ===================== -->
+
+<!-- شعار الهيئة + عنوان التقرير -->
+<table class="mb2" style="border:2px solid ${B};margin-bottom:3pt;">
+  <tr>
+    <td style="width:18%;padding:4pt 8pt;vertical-align:middle;border-left:1px solid ${BL};">
+      <div style="font-size:10pt;font-weight:900;color:${B};">الهيئة السعودية للمياه</div>
+      <div style="font-size:7pt;color:${BL};">Saudi Water Authority</div>
+    </td>
+    <td style="text-align:center;padding:4pt;border-left:1px solid ${BL};">
+      <div style="font-size:13pt;font-weight:900;color:${B};">تقرير التشغيل اليومي</div>
+    </td>
+    <td style="width:22%;padding:4pt 6pt;vertical-align:middle;">
+      <table style="width:100%;border-collapse:collapse;">
+        <tr>
+          <td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">اليوم</td>
+          <td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dayName||''}</td>
+        </tr>
+        <tr>
+          <td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">التاريخ</td>
+          <td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dateGreg||''}</td>
+        </tr>
+        <tr>
+          <td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">الهجري</td>
+          <td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dateHijri||''}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- ===== معلومات المحطة ===== -->
+<div style="${secH}" class="mb2">معلومات المحطة</div>
+<table class="mb2" style="border:1px solid ${BL};">
+  <tr>
+    <th style="${thS};width:7%">المدينة</th>
+    <th style="${thS};width:7%">القطاع</th>
+    <th style="${thS};width:10%">المحطة</th>
+    <th style="${thS};width:12%">الجهة المستفيدة</th>
+    <th style="${thS};width:10%">الإنتاج التصميمي<br/>م³/يوم</th>
+    <th style="${thS};width:9%">آلية التشغيل</th>
+    <th style="${thS};width:9%">الشركة المشغّلة</th>
+    <th style="${thS};width:9%">مصدر المياه</th>
+    <th style="${thS};width:9%">عدد الآبار الكلي</th>
+    <th style="${thS};width:9%">آبار في الخدمة</th>
+    <th style="${thS}">الاستهلاك<br/>KW/DAY</th>
+  </tr>
+  <tr>
+    <td style="${tdS}">${r.city||''}</td>
+    <td style="${tdS}">${r.sector||''}</td>
+    <td style="${tdS};font-weight:700">${r.station||''}</td>
+    <td style="${tdS}">${r.beneficiary||''}</td>
+    <td style="${tdS};font-weight:700">${r.designProd||''}</td>
+    <td style="${tdS}">${r.opMode||''}</td>
+    <td style="${tdS}">${r.opCompany||''}</td>
+    <td style="${tdS}">${r.waterSource||''}</td>
+    <td style="${tdS}">${r.totalWells||''}</td>
+    <td style="${tdS}">${r.activeWells||''}</td>
+    <td style="${tdS}">${r.kwDay||''}</td>
+  </tr>
+  <tr>
+    <td style="${tdLbl};text-align:center;">أرقام الآبار في الخدمة</td>
+    <td colspan="10" style="${tdS};text-align:right;padding-right:6pt;">${r.wellNumbers||''}</td>
+  </tr>
+</table>
+
+<!-- ===== الإنتاج ===== -->
+<div style="${secH}" class="mb2">الإنتاج</div>
+<table class="mb2">
+  <tr>
+    <th style="${thS};width:7%" rowspan="2">الإنتاج</th>
+    <th style="${thS}" colspan="2">طبيعي</th>
+    <th style="${thS}" colspan="2">منخفض</th>
+    <th style="${thS};width:12%" rowspan="2">سبب الانخفاض</th>
+    <th style="${thS}" colspan="2">التصدير (HPP)</th>
+    <th style="${thS}" colspan="3">مضخات الرفع</th>
+  </tr>
+  <tr>
+    <th style="${thLS}">م³/يوم</th><th style="${thLS}">نعم/لا</th>
+    <th style="${thLS}">م³/يوم</th><th style="${thLS}">نعم/لا</th>
+    <th style="${thLS}">الكمية م³/يوم</th><th style="${thLS}">معدل الضخ م³/س</th>
+    <th style="${thLS}">العدد الكلي</th><th style="${thLS}">في الخدمة</th><th style="${thLS}">معدل الضخ</th>
+  </tr>
+  <tr style="background:${W}">
+    <td style="${tdLbl}">نساح</td>
+    <td style="${tdS};font-weight:700">${r.nasah_nat||''}</td>
+    <td style="${tdS}">نعم</td>
+    <td style="${tdS}">${r.nasah_low||''}</td>
+    <td style="${tdS}">-</td>
+    <td style="${tdS}">${r.nasah_reason||''}</td>
+    <td style="${tdS}">${r.nasah_hpp_qty||''}</td>
+    <td style="${tdS}">${r.nasah_hpp_rate||''}</td>
+    <td style="${tdS}">${r.nasah_pump_total||''}</td>
+    <td style="${tdS}">${r.nasah_pump_active||''}</td>
+    <td style="${tdS}">-</td>
+  </tr>
+  <tr style="background:${AZ}">
+    <td style="${tdLbl}">منفوحة</td>
+    <td style="${tdS};font-weight:700">${r.manf_nat||''}</td>
+    <td style="${tdS}">نعم</td>
+    <td style="${tdS}">${r.manf_low||''}</td>
+    <td style="${tdS}">-</td>
+    <td style="${tdS}">${r.manf_reason||''}</td>
+    <td style="${tdS}">${r.manf_hpp_qty||''}</td>
+    <td style="${tdS}">${r.manf_hpp_rate||''}</td>
+    <td style="${tdS}">${r.manf_pump_total||''}</td>
+    <td style="${tdS}">${r.manf_pump_active||''}</td>
+    <td style="${tdS}">-</td>
+  </tr>
+  <tr style="background:#d0ecd0;">
+    <td style="border:1px solid ${BL};padding:3pt;background:#d0ecd0;font-weight:900;font-size:7pt;">الإجمالي</td>
+    <td style="border:1px solid ${BL};padding:3pt;font-weight:900;text-align:center;">${totalProd.toLocaleString()}</td>
+    <td colspan="5" style="border:1px solid ${BL};padding:3pt;"></td>
+    <td style="border:1px solid ${BL};padding:3pt;font-weight:900;text-align:center;">${totalHPP.toLocaleString()}</td>
+    <td colspan="3" style="border:1px solid ${BL};padding:3pt;"></td>
+  </tr>
+</table>
+
+<!-- ===== معدات خارج الخدمة ===== -->
+<div style="${secH}" class="mb2">معدات التشغيل الخارجة عن الخدمة</div>
+<table class="mb2">
+  <tr>
+    <th style="${thS};width:10%">اسم المعدة</th>
+    <th style="${thS}">مضخات الرفع</th>
+    <th style="${thS}">المحولات</th>
+    <th style="${thS}">مضخات تجريع الكلور</th>
+    <th style="${thS}">بادئ تشغيل</th>
+    <th style="${thS}">مولدات ديزل – عدد</th>
+    <th style="${thS}">شركة الكهرباء</th>
+  </tr>
+  <tr>
+    <td style="${tdLbl}">الموقع</td>
+    <td style="${tdS}">${r.eq_lift_loc||''}</td>
+    <td style="${tdS}">${r.eq_trans_loc||''}</td>
+    <td style="${tdS}">${r.eq_chlor_loc||''}</td>
+    <td style="${tdS}">${r.eq_start_loc||''}</td>
+    <td style="${tdS}">${r.eq_gen_loc||''}</td>
+    <td style="${tdS}">${r.eq_elec_loc||''}</td>
+  </tr>
+  <tr style="background:${AZ}">
+    <td style="${tdLbl}">العدد</td>
+    <td style="${tdS}">${r.eq_lift_total||''}</td>
+    <td style="${tdS}">${r.eq_trans_total||''}</td>
+    <td style="${tdS}">${r.eq_chlor_total||''}</td>
+    <td style="${tdS}">${r.eq_start_total||''}</td>
+    <td style="${tdS}">${r.eq_gen_total||''}</td>
+    <td style="${tdS}">${r.eq_elec_total||''}</td>
+  </tr>
+  <tr>
+    <td style="${tdLbl}">في الخدمة</td>
+    <td style="${tdS}">${r.eq_lift_active||''}</td>
+    <td style="${tdS}">${r.eq_trans_active||''}</td>
+    <td style="${tdS}">${r.eq_chlor_active||''}</td>
+    <td style="${tdS}">${r.eq_start_active||''}</td>
+    <td style="${tdS}">${r.eq_gen_active||''}</td>
+    <td style="${tdS}">${r.eq_elec_active||''}</td>
+  </tr>
+  <tr style="background:${AZ}">
+    <td style="${tdLbl}">خارج الخدمة</td>
+    <td style="${tdS}">${r.eq_lift_out||''}</td>
+    <td style="${tdS}">${r.eq_trans_out||''}</td>
+    <td style="${tdS}">${r.eq_chlor_out||''}</td>
+    <td style="${tdS}">${r.eq_start_out||''}</td>
+    <td style="${tdS}">${r.eq_gen_out||''}</td>
+    <td style="${tdS}">${r.eq_elec_out||''}</td>
+  </tr>
+  <tr>
+    <td style="${tdLbl}">السبب</td>
+    <td style="${tdS}">${r.eq_lift_reason||'مضخات احتياطية'}</td>
+    <td style="${tdS}">${r.eq_trans_reason||'مضخات احتياطية'}</td>
+    <td style="${tdS}">${r.eq_chlor_reason||'مضخات احتياطية'}</td>
+    <td style="${tdS}">${r.eq_start_reason||''}</td>
+    <td style="${tdS}">${r.eq_gen_reason||''}</td>
+    <td style="${tdS}">${r.eq_elec_reason||''}</td>
+  </tr>
+  <tr>
+    <td style="${tdLbl}">ملاحظات التشغيل</td>
+    <td colspan="6" style="${tdS};text-align:right;padding-right:6pt;">${r.opNotes||''}</td>
+  </tr>
+</table>
+
+<!-- ===== تقرير الصيانة ===== -->
+<div style="${secH}" class="mb2">تقرير الصيانة</div>
+<table class="mb2">
+  <tr>
+    <th style="${thS};width:5%">نوع الصيانة،<br/>وقائية تصحيحية</th>
+    <th style="${thS};width:14%">اسم المعدة</th>
+    <th style="${thS};width:9%">الموقع</th>
+    <th style="${thS}">وصف العمل</th>
+    <th style="${thS};width:16%">ملاحظات</th>
+  </tr>
+  ${mRows.map((m,i)=>`
+  <tr style="background:${az(i)}">
+    <td style="${tdS}">${m.type||''}</td>
+    <td style="${tdS}">${m.equip||''}</td>
+    <td style="${tdS}">${m.loc||''}</td>
+    <td style="${tdS};text-align:right;padding-right:4pt;">${m.work||''}</td>
+    <td style="${tdS}">${m.notes||''}</td>
+  </tr>`).join('')}
+  <tr>
+    <td style="${tdLbl}">ملاحظات الصيانة</td>
+    <td colspan="4" style="${tdS};text-align:right;padding-right:6pt;">${r.maintNotes||''}</td>
+  </tr>
+</table>
+
+<!-- ===== تقرير جودة المياه ===== -->
+<div style="${secH}" class="mb2">تقرير جودة المياه</div>
+<table style="margin-bottom:1pt;">
+  <tr><td colspan="10" style="background:${BL};color:#fff;text-align:center;font-weight:700;font-size:8pt;padding:3pt;border:1px solid ${BL};">Physical Analysis</td></tr>
+  <tr>
+    <th style="${thS};width:13%">Parameters</th>
+    <th style="${thS};width:7%">Time<br/>Hrs.</th>
+    <th style="${thS};width:8%">Temp.<br/>°C</th>
+    <th style="${thS};width:9%">Turbidity<br/>NTU</th>
+    <th style="${thS};width:10%">Free Chlorine<br/>mg/l</th>
+    <th style="${thS};width:7%">pH</th>
+    <th style="${thS};width:10%">Conductivity<br/>µs/cm</th>
+    <th style="${thS};width:9%">TDS<br/>mg/l</th>
+    <th style="${thS};width:9%">T. Iron<br/>mg/l</th>
+    <th style="${thS}">الملاحظات</th>
+  </tr>
+  <tr>
+    <th style="${thLS}">Unit</th>
+    <th style="${thLS}">Hrs.</th>
+    <th style="${thLS}">°C</th>
+    <th style="${thLS}">NTU</th>
+    <th style="${thLS}">mg/l</th>
+    <th style="${thLS}">——</th>
+    <th style="${thLS}">µs/cm</th>
+    <th style="${thLS}">mg/l</th>
+    <th style="${thLS}">mg/l</th>
+    <th style="${thLS}">——</th>
+  </tr>
+  <tr style="background:#1565a0;">
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-weight:700;font-size:7pt;">MEWA-2021<br/>Standards</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">——</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">40</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">Max. 5</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">0.2 - 0.5</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">6.5 – 8.5</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">——</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">100 - 1000</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">Max. 0.3</td>
+    <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">——</td>
+  </tr>
+  ${qRows.map((q,i)=> q.lbl ? `
+  <tr style="background:${az(i)}">
+    <td style="${tdLbl}">${q.lbl}</td>
+    <td style="${tdS}">${q.t||''}</td>
+    <td style="${tdS}">${q.temp||''}</td>
+    <td style="${tdS}">${q.turb||''}</td>
+    <td style="${tdS}">${q.cl||''}</td>
+    <td style="${tdS}">${q.ph||''}</td>
+    <td style="${tdS}">${q.cond||''}</td>
+    <td style="${tdS}">${q.tds||''}</td>
+    <td style="${tdS}">${q.iron||''}</td>
+    <td style="${tdS}">${q.note||''}</td>
+  </tr>` : `<tr><td colspan="10" style="${tdS};height:14pt;"></td></tr>`
+  ).join('')}
+  <tr>
+    <td style="${tdLbl}">الملاحظات</td>
+    <td colspan="9" style="${tdS};height:16pt;text-align:right;padding-right:6pt;"></td>
+  </tr>
+</table>
+
+<!-- ===== الاعتماد ===== -->
+<div style="${secH};margin-top:3pt;" class="mb2">الإعتماد</div>
+<table class="mb2">
+  <tr>
+    <th style="${thS};width:13%">المعتمد</th>
+    <th style="${thS}">مشرف المؤسسة العامة لتحلية المياه المالحة</th>
+    <th style="${thS}">المراقب</th>
+    <th style="${thS};width:13%">مشرف المياه الوطنية</th>
+  </tr>
+  <tr>
+    <td style="${tdLbl}">الاسم</td>
+    <td style="${tdS}">${r.salineSupervisor||''}</td>
+    <td style="${tdS}">${r.supervisor||''}</td>
+    <td style="${tdS}">${r.nwcSupervisor||''}</td>
+  </tr>
+  <tr style="height:36pt;">
+    <td style="${tdLbl}">التوقيع</td>
+    <td style="${tdS}"></td>
+    <td style="${tdS}"></td>
+    <td style="${tdS}"></td>
+  </tr>
+</table>
+
+</body></html>`;
+}
+
+/* ============================================================
+   PRINT
+============================================================ */
+function printReport(){
+  const r = collectForm();
+  const html = buildPrintHTML(r);
+  const win = window.open('','_blank','width=900,height=700');
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  setTimeout(()=>{ win.print(); }, 600);
+}
+
+/* ============================================================
+   SAVE REPORT
+============================================================ */
+function saveReport(){
+  const data = collectForm();
+  if(!data.dateGreg){ toast('يرجى إدخال التاريخ على الأقل!','danger'); return; }
+  records.unshift(data);
+  saveDB();
+  toast('✅ تم حفظ التقرير بنجاح!');
+}
+
+/* ============================================================
+   CLEAR FORM
+============================================================ */
+function clearForm(){
+  if(!confirm('هل تريد مسح جميع البيانات؟')) return;
+  document.querySelectorAll('#form-tab input[type=text],#form-tab input[type=number],#form-tab input[type=date],#form-tab input[type=time],#form-tab textarea').forEach(el=>el.value='');
+  document.getElementById('dateGreg').valueAsDate=new Date();
+  document.getElementById('city').value='الرياض';
+  document.getElementById('sector').value='الأوسط';
+  toast('تم مسح النموذج','info');
+}
+
+/* ============================================================
+   RECORDS LIST
+============================================================ */
+function renderRecords(){
+  const q=(document.getElementById('searchRec')?.value||'').toLowerCase();
+  const fil=q?records.filter(r=>(r.dateGreg||'').includes(q)||(r.station||'').toLowerCase().includes(q)||(r.city||'').includes(q)):records;
+  const c=document.getElementById('recordsList');
+  if(!fil.length){ c.innerHTML='<p class="text-muted text-center py-4"><i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>لا توجد تقارير.</p>'; return; }
+  c.innerHTML=fil.map(r=>{
+    const tot=(parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0);
+    return `<div class="rec-item d-flex justify-content-between align-items-start flex-wrap gap-2">
+      <div>
+        <div class="rec-date"><i class="bi bi-calendar3 me-2"></i>${r.dateGreg||'—'} (${r.dateHijri||'—'}) | ${r.dayName||''}</div>
+        <div class="mt-1" style="font-size:.78rem;color:#475569">
+          <span class="me-3"><i class="bi bi-building me-1"></i>${r.station||'—'} – ${r.city||'—'}</span>
+          <span class="me-3"><i class="bi bi-droplet me-1 text-primary"></i>إنتاج: <strong>${tot.toLocaleString()} م³</strong></span>
+          ${r.q_raw_ph?`<span class="ms-2">pH: <strong>${r.q_raw_ph}</strong></span>`:''}
+        </div>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn-sm btn-swa" onclick="viewRecord(${r.id})"><i class="bi bi-eye me-1"></i>عرض</button>
+        <button class="btn btn-sm btn-outline-success" onclick="printFromRecord(${r.id})"><i class="bi bi-printer me-1"></i>طباعة</button>
+        <button class="btn btn-sm btn-outline-primary" onclick="loadToForm(${r.id})"><i class="bi bi-pencil me-1"></i>تعديل</button>
+        <button class="btn-red btn btn-sm" onclick="deleteRecord(${r.id})"><i class="bi bi-trash3"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function printFromRecord(id){
+  const r=records.find(x=>x.id===id);
+  if(!r) return;
+  const win=window.open('','_blank','width=900,height=700');
+  win.document.write(buildPrintHTML(r));
+  win.document.close();
+  win.focus();
+  setTimeout(()=>win.print(),600);
+}
+
+/* ============================================================
+   VIEW RECORD MODAL
+============================================================ */
+function viewRecord(id){
+  const r=records.find(x=>x.id===id);
+  if(!r) return;
+  const tot=(parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0);
+  document.getElementById('modalBody').innerHTML=`
+  <div style="font-size:.83rem">
+    <div class="p-2 rounded mb-2" style="background:#eaf2ff">
+      <strong>التاريخ:</strong> ${r.dateGreg} (${r.dateHijri}) | <strong>المحطة:</strong> ${r.station} – ${r.city} | <strong>إجمالي الإنتاج:</strong> ${tot.toLocaleString()} م³
+    </div>
+    <div class="row g-2">
+      <div class="col-6"><strong>نساح:</strong> ${r.nasah_nat||'—'} م³</div>
+      <div class="col-6"><strong>منفوحة:</strong> ${r.manf_nat||'—'} م³</div>
+      <div class="col-6"><strong>pH (خام):</strong> ${r.q_raw_ph||'—'}</div>
+      <div class="col-6"><strong>عكورة:</strong> ${r.q_raw_turb||'—'} NTU</div>
+      <div class="col-6"><strong>كلور حر:</strong> ${r.q_raw_cl||'—'} mg/l</div>
+      <div class="col-6"><strong>TDS:</strong> ${r.q_raw_tds||'—'} mg/l</div>
+    </div>
+    <hr/>
+    <p class="text-muted" style="font-size:.72rem">تم الحفظ: ${new Date(r.savedAt).toLocaleString('ar-SA')}</p>
+    <button class="btn btn-success btn-sm fw-bold" onclick="printFromRecord(${r.id})"><i class="bi bi-printer-fill me-1"></i>طباعة A4</button>
+  </div>`;
+  new bootstrap.Modal(document.getElementById('viewModal')).show();
+}
+
+/* ============================================================
+   LOAD TO FORM
+============================================================ */
+function loadToForm(id){
+  const r=records.find(x=>x.id===id);
+  if(!r) return;
+  const fields=['dayName','dateGreg','dateHijri','opCompany','city','sector','station','beneficiary','waterSource',
+    'designProd','opMode','totalWells','activeWells','wellNumbers','kwDay','reverseOsmosis',
+    'nasah_nat','nasah_low','nasah_reason','nasah_hpp_qty','nasah_hpp_rate','nasah_pump_total','nasah_pump_active',
+    'manf_nat','manf_low','manf_reason','manf_hpp_qty','manf_hpp_rate','manf_pump_total','manf_pump_active',
+    'eq_lift_loc','eq_lift_total','eq_lift_active','eq_lift_out','eq_lift_reason',
+    'eq_trans_loc','eq_trans_total','eq_trans_active','eq_trans_out','eq_trans_reason',
+    'eq_chlor_loc','eq_chlor_total','eq_chlor_active','eq_chlor_out','eq_chlor_reason',
+    'eq_start_loc','eq_start_total','eq_start_active','eq_start_out','eq_start_reason',
+    'eq_gen_loc','eq_gen_total','eq_gen_active','eq_gen_out','eq_gen_reason',
+    'eq_elec_loc','eq_elec_total','eq_elec_active','eq_elec_out','eq_elec_reason',
+    'opNotes','maintNotes',
+    'q_raw_time','q_raw_temp','q_raw_turb','q_raw_cl','q_raw_ph','q_raw_cond','q_raw_tds','q_raw_iron','q_raw_notes',
+    'q_prod_time','q_prod_temp','q_prod_turb','q_prod_cl','q_prod_ph','q_prod_cond','q_prod_tds','q_prod_iron','q_prod_notes',
+    'q_rej_time','q_rej_temp','q_rej_turb','q_rej_cl','q_rej_ph','q_rej_cond','q_rej_tds','q_rej_iron','q_rej_notes',
+    'approver','supervisor','nwcSupervisor','salineSupervisor'];
+  fields.forEach(f=>sv(f,r[f]));
+
+  const tbody=document.getElementById('maintBody');
+  tbody.innerHTML=''; maintCount=0;
+  (r.maintRows||[{num:1,type:'وقائية',equip:'',loc:'',work:'',notes:''}]).forEach((m,i)=>{
+    maintCount++;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td>
+      <td class="ic"><select style="width:100%;border:none;font-size:.75rem">
+        <option ${m.type==='وقائية'?'selected':''}>وقائية</option>
+        <option ${m.type==='تصحيحية'?'selected':''}>تصحيحية</option>
+        <option ${m.type==='طارئة'?'selected':''}>طارئة</option></select></td>
+      <td class="ic"><input type="text" value="${m.equip||''}" style="width:100%"/></td>
+      <td class="ic"><input type="text" value="${m.loc||''}" style="width:100%"/></td>
+      <td class="ic"><input type="text" value="${m.work||''}" style="width:100%"/></td>
+      <td class="ic"><input type="text" value="${m.notes||''}" style="width:100%"/></td>
+      <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="removeMaintRow(this)"><i class="bi bi-trash3"></i></button></td>`;
+    tbody.appendChild(tr);
+  });
+  if(maintCount===0) addMaintRow();
+
+  records=records.filter(x=>x.id!==id);
+  saveDB();
+  showTab('form-tab',document.querySelectorAll('.tab-btn')[0]);
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  toast('تم تحميل التقرير – اضغط حفظ عند الانتهاء','info');
+}
+
+/* ============================================================
+   DELETE
+============================================================ */
+function deleteRecord(id){
+  if(!confirm('حذف هذا التقرير نهائياً؟')) return;
+  records=records.filter(x=>x.id!==id);
+  saveDB(); renderRecords();
+  toast('تم الحذف','danger');
+}
+function clearAllRecords(){
+  if(!confirm('حذف جميع التقارير؟')) return;
+  records=[]; saveDB(); renderRecords();
+  toast('تم مسح جميع التقارير','danger');
+}
+
+/* ============================================================
+   STATS
+============================================================ */
+function renderStats(){
+  document.getElementById('s_total').textContent=records.length;
+  const prods=records.map(r=>(parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0)).filter(x=>x>0);
+  document.getElementById('s_prod').textContent=prods.length?Math.round(prods.reduce((a,b)=>a+b)/prods.length).toLocaleString():'—';
+  document.getElementById('s_maint').textContent=records.reduce((s,r)=>(r.maintRows||[]).filter(m=>m.work).length+s,0);
+  const phs=records.map(r=>parseFloat(r.q_raw_ph)).filter(x=>!isNaN(x));
+  document.getElementById('s_ph').textContent=phs.length?(phs.reduce((a,b)=>a+b)/phs.length).toFixed(1):'—';
+  const last10=records.slice(0,10);
+  const tbody=document.getElementById('statsQBody');
+  if(!last10.length){ tbody.innerHTML='<tr><td colspan="8" class="text-muted text-center py-3">لا توجد بيانات</td></tr>'; return; }
+  tbody.innerHTML=last10.map(r=>{
+    const ph=parseFloat(r.q_raw_ph);
+    const turb=parseFloat(r.q_raw_turb);
+    const phOk=!isNaN(ph)&&ph>=6.5&&ph<=8.5;
+    const turbOk=!isNaN(turb)&&turb<=5;
+    const allOk=phOk&&turbOk;
+    return `<tr>
+      <td>${r.dateGreg||'—'}</td>
+      <td class="${parseFloat(r.q_raw_temp)<=40?'limit-ok':'limit-ng'}">${r.q_raw_temp||'—'}</td>
+      <td class="${turbOk?'limit-ok':'limit-ng'}">${r.q_raw_turb||'—'}</td>
+      <td>${r.q_raw_cl||'—'}</td>
+      <td class="${phOk?'limit-ok':'limit-ng'}">${r.q_raw_ph||'—'}</td>
+      <td>${r.q_raw_tds||'—'}</td>
+      <td>${r.q_raw_iron||'—'}</td>
+      <td><span class="${allOk?'badge-ok':'badge-warn'}">${allOk?'✅ مطابق':'⚠️ مراجعة'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+document.getElementById('dateGreg').valueAsDate=new Date();
+document.getElementById('dateGreg').addEventListener('change',function(){
+  const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  document.getElementById('dayName').value=days[new Date(this.value).getDay()];
+});
+document.getElementById('city').value='الرياض';
+document.getElementById('sector').value='الأوسط';
 </script>
-
 </body>
 </html>
