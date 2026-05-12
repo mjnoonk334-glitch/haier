@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>نظام تقارير التشغيل اليومي - الهيئة السعودية للمياه</title>
+<title>نظام تقرير التشغيل اليومي - وكالة تنقية المياه الجوفية </title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
 <style>
@@ -200,8 +200,8 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
   <div class="logo">
     <div class="nav-icon"><i class="bi bi-droplet-fill"></i></div>
     <div>
-      <h1>نظام تقارير التشغيل اليومي</h1>
-      <p>الهيئة السعودية للمياه – قطاع الأوسط – الرياض</p>
+      <h1>نظام تقرير التشغيل اليومي</h1>
+      <p>وكالة تنقية المياه الجوفية – القطاع الأوسط – الحاير</p>
     </div>
   </div>
   <div class="d-flex align-items-center gap-2">
@@ -241,7 +241,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
         <div class="col-md-3"><label class="form-label">التاريخ الهجري</label>
           <input type="text" class="form-control" id="dateHijri" placeholder="مثال: 26-11-1445"/></div>
         <div class="col-md-3"><label class="form-label">الشركة المشغّلة</label>
-          <input type="text" class="form-control" id="opCompany" placeholder="NWC"/></div>
+          <input type="text" class="form-control" id="opCompany" placeholder="SWA"/></div>
       </div>
       <div class="row g-2 mb-2">
         <div class="col-md-2"><label class="form-label">المدينة</label>
@@ -249,7 +249,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
         <div class="col-md-2"><label class="form-label">القطاع</label>
           <input type="text" class="form-control" id="sector" value="الأوسط"/></div>
         <div class="col-md-3"><label class="form-label">المحطة</label>
-          <input type="text" class="form-control" id="station" placeholder="الخير"/></div>
+          <input type="text" class="form-control" id="station" placeholder="الحاير"/></div>
         <div class="col-md-3"><label class="form-label">الجهة المستفيدة</label>
           <input type="text" class="form-control" id="beneficiary" placeholder="الشميسي – منفوحة"/></div>
         <div class="col-md-2"><label class="form-label">مصدر المياه</label>
@@ -514,14 +514,10 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
     <div class="s-sec">الاعتماد</div>
     <div class="s-card-body">
       <div class="row g-3">
-        <div class="col-md-3"><label class="form-label">المعتمد</label>
-          <input type="text" class="form-control" id="approver"/></div>
-        <div class="col-md-3"><label class="form-label">المراقب</label>
-          <input type="text" class="form-control" id="supervisor" placeholder="ناصر الدوسري"/></div>
-        <div class="col-md-3"><label class="form-label">مشرف المياه الوطنية</label>
+        <div class="col-md-3"><label class="form-label">معد التقرير</label>
+          <input type="text" class="form-control" id="supervisor" placeholder= "الاسم"/></div>
+        <div class="col-md-3"><label class="form-label">مشرف  التشغيل</label>
           <input type="text" class="form-control" id="nwcSupervisor" placeholder="عبدالله المطيري"/></div>
-        <div class="col-md-3"><label class="form-label">مشرف المؤسسة العامة لتحلية المياه</label>
-          <input type="text" class="form-control" id="salineSupervisor"/></div>
       </div>
     </div>
   </div>
@@ -716,7 +712,7 @@ function buildPrintHTML(r){
   // quality sampling rows
   const qRows=[
     {lbl:'Raw water / مياه خام', t:r.q_raw_time,temp:r.q_raw_temp,turb:r.q_raw_turb,cl:r.q_raw_cl,ph:r.q_raw_ph,cond:r.q_raw_cond,tds:r.q_raw_tds,iron:r.q_raw_iron,note:r.q_raw_notes},
-    {lbl:'Product Water / مياه منتجة', t:r.q_prod_time,temp:r.q_prod_temp,turb:r.q_prod_turb,cl:r.q_prod_cl,ph:r.q_prod_ph,cond:r.q_prod_cond,tds:r.q_prod_tds,iron:r.q_prod_iron,note:r.q_prod_notes},
+    {lbl:'Product Water / مياه رجيع', t:r.q_prod_time,temp:r.q_prod_temp,turb:r.q_prod_turb,cl:r.q_prod_cl,ph:r.q_prod_ph,cond:r.q_prod_cond,tds:r.q_prod_tds,iron:r.q_prod_iron,note:r.q_prod_notes},
     {lbl:'Rejected Water / مياه مرفوضة', t:r.q_rej_time,temp:r.q_rej_temp,turb:r.q_rej_turb,cl:r.q_rej_cl,ph:r.q_rej_ph,cond:r.q_rej_cond,tds:r.q_rej_tds,iron:r.q_rej_iron,note:r.q_rej_notes},
     {lbl:''},
   ];
@@ -1024,10 +1020,8 @@ function buildPrintHTML(r){
 <div style="${secH};margin-top:3pt;" class="mb2">الإعتماد</div>
 <table class="mb2">
   <tr>
-    <th style="${thS};width:13%">المعتمد</th>
-    <th style="${thS}">مشرف المؤسسة العامة لتحلية المياه المالحة</th>
-    <th style="${thS}">المراقب</th>
-    <th style="${thS};width:13%">مشرف المياه الوطنية</th>
+    <th style="${thS};width:13%">معد التقرير</th>
+    <th style="${thS}"> مشرف التشغيل </th>
   </tr>
   <tr>
     <td style="${tdLbl}">الاسم</td>
