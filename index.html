@@ -247,8 +247,8 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
         <div class="col-md-3"><label class="form-label">التاريخ الميلادي</label>
           <input type="date" class="form-control" id="dateGreg"/></div>
         <div class="col-md-3"><label class="form-label">التاريخ الهجري</label>
-         <input type="data" class="form-control" id="dataHijri" readonly/></div>
-          <div class="col-md-3"><label class="form-label">الشركة المشغّلة</label>
+          <input type="text" class="form-control" id="dateHijri" placeholder=""/></div>
+        <div class="col-md-3"><label class="form-label">الشركة المشغّلة</label>
           <input type="text" class="form-control" id="opCompany" placeholder="SWA"/></div>
       </div>
       <div class="row g-2 mb-2">
@@ -334,7 +334,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
       <table class="scr-table">
         <thead>
           <tr>
-            <th style="width:10%">*</th>
+            <th style="width:12%">البيان</th>
             <th>مضخات الرفع</th>
             <th>المحولات</th>
             <th>مضخات تجريع الكلور</th>
@@ -402,7 +402,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
           <tr>
             <th style="width:4%">#</th>
             <th style="width:12%">نوع الصيانة</th>
-            <th style="width:12%">اسم المعدة</th>
+            <th style="width:16%">اسم المعدة</th>
             <th style="width:12%">الموقع</th>
             <th>وصف العمل</th>
             <th style="width:18%">ملاحظات</th>
@@ -1148,6 +1148,7 @@ function reportToNotionProps(r){
     "TDS":     { number: parseFloat(r.q_raw_tds)||0 },
     "ملاحظات_تشغيل": { rich_text: [{ text: { content: r.opNotes || '' } }] },
     "معد_التقرير":   { rich_text: [{ text: { content: r.supervisor || '' } }] },
+    "مشرف_التشغيل":  { rich_text: [{ text: { content: r.nwcSupervisor || '' } }] },
     "البيانات_الكاملة": { rich_text: [{ text: { content: JSON.stringify(r).substring(0,1900) } }] }
   };
 }
@@ -1308,21 +1309,35 @@ if(savedDbId)  document.getElementById('notionDbId').value  = savedDbId;
             <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="this.parentElement.parentElement.remove()"><i class="bi bi-trash3"></i></button></td>
         `;
         tbody.appendChild(tr);
-    }
 
-    // 3. وظيفة الحفظ المحلي (يجمع البيانات من الخانات ويخزنها)
-    function saveReport() {
-        const report = {
-            id: Date.now(),
-            station: document.getElementById('station').value,
-            date: document.getElementById('dateGreg').value,
-            time: new Date().toLocaleString('ar-SA')
-        };
-        records.push(report);
-        localStorage.setItem('swa_reports_v2', JSON.stringify(records));
-        alert("تم حفظ التقرير في ذاكرة المتصفح بنجاح!");
-    }
+{
+async function saveReport() 
+    const reportData = {
+        date: document.getElementById('dateGreg').value,
+        day: document.getElementById('dayName').value,
+        station: document.getElementById('station').value,
+        production: document.getElementById('nasah_prod').value,
+        tds: document.getElementById('q_prod_tds').value,
+        ph: document.getElementById('q_prod_ph').value,
+        cl: document.getElementById('q_prod_cl').value,
+        supervisor: document.getElementById('supervisor').value
+    };
 
+    // رابط جوجل الذي نسخته ضعه هنا
+    const scriptURL = 'رابط_جوجل_هنا';
+
+    try {
+        toast("جاري الحفظ في السحابة...", "info");
+        await fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify(reportData)
+        });
+        toast("تم الحفظ في السحابة وفي جدول البيانات!");
+    } catch (error) {
+        console.error('Error!', error.message);
+        toast("فشل الحفظ في السحابة، تم الحفظ محلياً فقط", "danger");
+    }
+}
     // 4. وظيفة الطباعة (تفتح نافذة الطباعة الرسمية)
     function printReport() {
         window.print();
@@ -1334,180 +1349,6 @@ if(savedDbId)  document.getElementById('notionDbId').value  = savedDbId;
             location.reload();
         }
     }
-   
-/* ============================================================
-    تكملة منطق الجافاسكريبت - نظام SWA
-============================================================ */
-
-// 1. إدارة جداول الصيانة
-function addMaintRow() {
-    const tbody = document.getElementById('maintBody');
-    const rowCount = tbody.rows.length + 1;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td>${rowCount}</td>
-        <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>وقائية</option><option>تصحيحية</option><option>طارئة</option></select></td>
-        <td class="ic"><input type="text" style="width:100%"/></td>
-        <td class="ic"><input type="text" style="width:100%"/></td>
-        <td class="ic"><input type="text" style="width:100%"/></td>
-        <td class="ic"><input type="text" style="width:100%"/></td>
-        <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="removeMaintRow(this)"><i class="bi bi-trash3"></i></button></td>
-    `;
-    tbody.appendChild(tr);
-}
-
-function removeMaintRow(btn) {
-    btn.closest('tr').remove();
-    // إعادة ترقيم الأسطر
-    const rows = document.querySelectorAll('#maintBody tr');
-    rows.forEach((row, index) => { row.cells[0].innerText = index + 1; });
-}
-
-// 2. حفظ التقرير محلياً (Local Storage)
-function saveReport() {
-    const reportData = {
-        id: Date.now(),
-        date: gv('dateGreg'),
-        day: gv('dayName'),
-        station: gv('station'),
-        production: {
-            nasah: gv('nasah_prod'),
-            manf: gv('manf_prod')
-        },
-        quality: {
-            ph: gv('q_prod_ph'),
-            tds: gv('q_prod_tds'),
-            cl: gv('q_prod_cl')
-        }
-    };
-
-    if(!reportData.date) {
-        toast("يرجى اختيار التاريخ قبل الحفظ", "danger");
-        return;
-    }
-
-    records.push(reportData);
-    saveDB();
-    toast("تم حفظ التقرير في السجل المحلي بنجاح");
-    renderRecords();
-}
-
-// 3. عرض السجلات المحفوظة
-function renderRecords() {
-    const list = document.getElementById('recordsList');
-    const search = gv('searchRec').toLowerCase();
-    list.innerHTML = '';
-
-    const filtered = records.filter(r => r.date.includes(search) || r.station.toLowerCase().includes(search));
-
-    if(filtered.length === 0) {
-        list.innerHTML = '<p class="text-center text-muted">لا توجد تقارير محفوظة حالياً.</p>';
-        return;
-    }
-
-    filtered.reverse().forEach(r => {
-        const item = document.createElement('div');
-        item.className = 'rec-item d-flex justify-content-between align-items-center';
-        item.innerHTML = `
-            <div>
-                <span class="rec-date">${r.date}</span> - 
-                <span class="fw-bold">${r.day}</span> | 
-                <span>المحطة: ${r.station || 'غير محدد'}</span>
-            </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-primary" onclick="viewReport(${r.id})"><i class="bi bi-eye"></i> عرض</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})"><i class="bi bi-trash"></i></button>
-            </div>
-        `;
-        list.appendChild(item);
-    });
-}
-
-// 4. حذف سجل
-function deleteRecord(id) {
-    if(confirm('هل أنت متأكد من حذف هذا التقرير؟')) {
-        records = records.filter(r => r.id !== id);
-        saveDB();
-        renderRecords();
-        toast("تم الحذف", "info");
-    }
-}
-
-// 5. مسح النموذج
-function clearForm() {
-    if(confirm('سيتم مسح جميع البيانات المكتوبة حالياً، هل أنت متأكد؟')) {
-        document.querySelectorAll('input, select, textarea').forEach(el => el.value = '');
-        document.getElementById('maintBody').innerHTML = '';
-        addMaintRow();
-        toast("تمت إعادة تهيئة النموذج", "info");
-    }
-}
-
-// 6. منطق الطباعة A4
-function printReport() {
-    // تحديث خلية التاريخ واليوم في صفحة الطباعة قبل بدء العملية
-    const printContent = `
-        <div class="print-page">
-            <div class="logo-row">
-                <div class="logo-ar">الحاير<br>وكالة تنقية المياه الجوفية</div>
-                <div class="report-title-p">تقرير التشغيل اليومي<br><small>${gv('station')}</small></div>
-                <div class="logo-icon-p">SWA</div>
-            </div>
-            
-            <table class="pt">
-                <tr>
-                    <td class="plbl">اليوم</td><td class="pval">${gv('dayName')}</td>
-                    <td class="plbl">التاريخ</td><td class="pval">${gv('dateGreg')}</td>
-                    <td class="plbl">المحطة</td><td class="pval">${gv('station')}</td>
-                </tr>
-            </table>
-            
-            <div class="psec mt-3">الإنتاج وجودة المياه</div>
-            <table class="pt">
-                <tr class="ph">
-                    <th>البيان</th><th>التدفق (م³/ي)</th><th>TDS</th><th>pH</th><th>الكلور</th>
-                </tr>
-                <tr>
-                    <td class="plbl">مياه المنتج</td>
-                    <td>${gv('nasah_prod')}</td>
-                    <td>${gv('q_prod_tds')}</td>
-                    <td>${gv('q_prod_ph')}</td>
-                    <td>${gv('q_prod_cl')}</td>
-                </tr>
-            </table>
-
-            <div class="psec mt-4">التوقيعات</div>
-            <div class="row mt-2">
-                <div class="col-6">
-                    <div class="sig-box">
-                        <div class="sig-lbl">معد التقرير</div>
-                        <div class="sig-name">${gv('supervisor')}</div>
-                        <div class="sig-line"></div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="sig-box">
-                        <div class="sig-lbl">اعتماد المشرف</div>
-                        <div class="sig-name">${gv('nwcSupervisor')}</div>
-                        <div class="sig-line"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    const printZone = document.getElementById('print-page');
-    printZone.innerHTML = printContent;
-    window.print();
-}
-
-// 7. تهيئة الصفحة عند التحميل
-window.onload = () => {
-    // وضع تاريخ اليوم تلقائياً
-    const today = new Date().toISOString().split('T')[0];
-    sv('dateGreg', today);
-    renderRecords();
-};
 </script>
 </body>
 </html>
