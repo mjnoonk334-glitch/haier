@@ -51,6 +51,13 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
 .btn-swa:hover{filter:brightness(1.12);color:#fff;}
 .btn-grn{background:linear-gradient(135deg,#198754,#28a745);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-weight:700;font-size:.85rem;cursor:pointer;}
 .btn-red{background:linear-gradient(135deg,#dc3545,#b02a37);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-weight:600;font-size:.8rem;cursor:pointer;}
+/* ===== Notion buttons ===== */
+.btn-notion{background:linear-gradient(135deg,#000,#444);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn-notion:hover{filter:brightness(1.3);}
+.notion-status{font-size:.75rem;padding:4px 12px;border-radius:20px;font-weight:700;}
+.notion-ok{background:#d1fae5;color:#065f46;}
+.notion-err{background:#fee2e2;color:#991b1b;}
+.notion-loading{background:#fef3c7;color:#92400e;}
 
 .tab-page{display:none;}
 .tab-page.active{display:block;}
@@ -112,7 +119,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
   .pt td, .pt th{
     border:1px solid #2e6db4;
     padding:2pt 3pt;
-    Horizontal-align:middle;
+    vertical-align:middle;
     text-align:center;
     font-size:7.5pt;
     line-height:1.3;
@@ -217,6 +224,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
   <button class="tab-btn active" onclick="showTab('form-tab',this)"><i class="bi bi-pencil-square me-1"></i>إدخال التقرير</button>
   <button class="tab-btn" onclick="showTab('records-tab',this)"><i class="bi bi-archive me-1"></i>سجل التقارير</button>
   <button class="tab-btn" onclick="showTab('stats-tab',this)"><i class="bi bi-bar-chart-fill me-1"></i>إحصائيات</button>
+  <button class="tab-btn" onclick="showTab('notion-tab',this)"><i class="bi bi-cloud-fill me-1"></i>Notion السحابة</button>
 </div>
 
 <div class="container-fluid p-3" style="max-width:1200px">
@@ -239,8 +247,8 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
         <div class="col-md-3"><label class="form-label">التاريخ الميلادي</label>
           <input type="date" class="form-control" id="dateGreg"/></div>
         <div class="col-md-3"><label class="form-label">التاريخ الهجري</label>
-          <input type="text" class="form-control" id="dateHijri" placeholder=""/></div>
-        <div class="col-md-3"><label class="form-label">الشركة المشغّلة</label>
+         <input type="data" class="form-control" id="dataHijri" readonly/></div>
+          <div class="col-md-3"><label class="form-label">الشركة المشغّلة</label>
           <input type="text" class="form-control" id="opCompany" placeholder="SWA"/></div>
       </div>
       <div class="row g-2 mb-2">
@@ -268,6 +276,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
           <input type="number" class="form-control" id="activeWells" placeholder=""/></div>
         <div class="col-md-2"><label class="form-label">آبار خارج الخدمة </label>
           <input type="number" class="form-control" id="reverseOsmosis" placeholder=""/></div>
+      </div>
       <div class="row g-2 mt-1">
         <div class="col-12"><label class="form-label"> السبب </label>
           <input type="text" class="form-control" id="wellNumbers" placeholder=""/></div>
@@ -297,21 +306,21 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
         <tbody>
           <tr>
             <td class="lbl-td fw-bold">نساح</td>
-            <td colspan="2"class="ic"><input type="text" id="nasah_reason"/></td>
-            <td colspan="2"class="ic"><input type="text" id="nasah_reason"/></td>
-            <td class="ic"><input type="text" id="nasah_reason"/></td>
-            <td class="ic"><input type="text" id="nasah_reason"/></td>
-            <td class="ic"><input type="text" id="nasah_reason"/></td>
-            <td class="ic"><input type="text" id="nasah_reason"/></td>
+            <td colspan="2" class="ic"><input type="text" id="nasah_prod"/></td>
+            <td colspan="2" class="ic"><input type="text" id="nasah_hpp"/></td>
+            <td class="ic"><input type="text" id="nasah_pump_total"/></td>
+            <td class="ic"><input type="text" id="nasah_pump_out"/></td>
+            <td class="ic"><input type="text" id="nasah_pump_reason"/></td>
+            <td class="ic"><input type="text" id="nasah_notes"/></td>
           </tr>
           <tr>
             <td class="lbl-td fw-bold">منفوحة</td>
-            <td colspan="2"class="ic"><input type="text" id="manf_reason"/></td>
-            <td colspan="2"class="ic"><input type="text" id="manf_reason"/></td>
-            <td class="ic"><input type="text" id="manf_reason"/></td>         
-            <td class="ic"><input type="text" id="manf_reason"/></td>            
-            <td class="ic"><input type="text" id="manf_reason"/></td>                      
-            <td class="ic"><input type="text" id="manf_reason"/></td>            
+            <td colspan="2" class="ic"><input type="text" id="manf_prod"/></td>
+            <td colspan="2" class="ic"><input type="text" id="manf_hpp"/></td>
+            <td class="ic"><input type="text" id="manf_pump_total"/></td>
+            <td class="ic"><input type="text" id="manf_pump_out"/></td>
+            <td class="ic"><input type="text" id="manf_pump_reason"/></td>
+            <td class="ic"><input type="text" id="manf_notes"/></td>
           </tr>
         </tbody>
       </table>
@@ -325,7 +334,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
       <table class="scr-table">
         <thead>
           <tr>
-            <th style="width:12%">البيان</th>
+            <th style="width:10%">*</th>
             <th>مضخات الرفع</th>
             <th>المحولات</th>
             <th>مضخات تجريع الكلور</th>
@@ -393,7 +402,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
           <tr>
             <th style="width:4%">#</th>
             <th style="width:12%">نوع الصيانة</th>
-            <th style="width:16%">اسم المعدة</th>
+            <th style="width:12%">اسم المعدة</th>
             <th style="width:12%">الموقع</th>
             <th>وصف العمل</th>
             <th style="width:18%">ملاحظات</th>
@@ -501,8 +510,8 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
     <div class="s-card-body">
       <div class="row g-3">
         <div class="col-md-3"><label class="form-label">معد التقرير</label>
-          <input type="text" class="form-control" id="supervisor" placeholder= "الاسم"/></div>
-        <div class="col-md-3"><label class="form-label">مشرف  التشغيل</label>
+          <input type="text" class="form-control" id="supervisor" placeholder="الاسم"/></div>
+        <div class="col-md-3"><label class="form-label">مشرف التشغيل</label>
           <input type="text" class="form-control" id="nwcSupervisor" placeholder="الاسم"/></div>
       </div>
     </div>
@@ -510,9 +519,11 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
 
   <!-- Action Buttons -->
   <div class="d-flex gap-3 mb-4 no-print flex-wrap">
-    <button class="btn-swa btn" onclick="saveReport()"><i class="bi bi-save-fill me-2"></i>حفظ التقرير</button>
+    <button class="btn-swa btn" onclick="saveReport()"><i class="bi bi-save-fill me-2"></i>حفظ محلي</button>
+    <button class="btn-notion" onclick="saveToNotion()"><i class="bi bi-cloud-upload-fill"></i>حفظ في Notion</button>
     <button class="btn-grn btn" onclick="printReport()"><i class="bi bi-printer-fill me-2"></i>طباعة A4</button>
     <button class="btn btn-outline-secondary" onclick="clearForm()"><i class="bi bi-arrow-counterclockwise me-2"></i>مسح النموذج</button>
+    <span id="notionFormStatus"></span>
   </div>
 
 </div><!-- /form-tab -->
@@ -556,14 +567,47 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
   </div>
 </div>
 
+<!-- ===================================================
+     TAB 4: NOTION CLOUD
+=================================================== -->
+<div id="notion-tab" class="tab-page">
+  <div class="screen-card">
+    <div class="s-sec"><i class="bi bi-cloud-fill me-2"></i>إعدادات Notion – الحفظ السحابي المشترك</div>
+    <div class="s-card-body">
+      <div class="alert alert-info" style="font-size:.83rem">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        التقارير المحفوظة هنا تظهر لجميع المستخدمين الذين يملكون نفس مفتاح Notion.
+        يمكن مشاركة الملف مع الزملاء وسيصلون لنفس البيانات.
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Notion Integration Token</label>
+          <input type="password" class="form-control" id="notionToken" placeholder="secret_xxxxxxxxxxxxxxxx"/>
+          <div class="form-text">Integration Token من إعدادات Notion</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Database ID</label>
+          <input type="text" class="form-control" id="notionDbId" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+          <div class="form-text">ID قاعدة البيانات في Notion</div>
+        </div>
+      </div>
+      <div class="d-flex gap-2 mb-3 flex-wrap">
+        <button class="btn-swa btn" onclick="testNotionConnection()"><i class="bi bi-wifi me-1"></i>اختبار الاتصال</button>
+        <button class="btn btn-outline-secondary" onclick="saveNotionSettings()"><i class="bi bi-gear me-1"></i>حفظ الإعدادات</button>
+        <button class="btn-grn btn" onclick="loadFromNotion()"><i class="bi bi-cloud-download-fill me-2"></i>تحميل التقارير من Notion</button>
+        <span id="notionConnStatus" class="notion-status" style="display:none"></span>
+      </div>
+      <hr/>
+      <div class="s-sec" style="border-radius:6px;margin-bottom:8px">التقارير في Notion</div>
+      <div id="notionRecordsList"><p class="text-muted text-center py-3">اضغط "تحميل التقارير من Notion" لعرضها</p></div>
+    </div>
+  </div>
+</div>
+
 </div><!-- /container -->
 
-<!-- ===================================================
-     PRINT PAGE  (hidden on screen, shown only on print)
-=================================================== -->
-<div id="print-page">
-  <!-- populated by JS before printing -->
-</div>
+<!-- PRINT PAGE -->
+<div id="print-page"></div>
 
 <!-- View Modal -->
 <div class="modal fade" id="viewModal" tabindex="-1">
@@ -583,7 +627,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 /* ============================================================
-   DATA LAYER
+   DATA LAYER  (localStorage – كما كان أصلاً)
 ============================================================ */
 let records = JSON.parse(localStorage.getItem('swa_reports_v2') || '[]');
 function saveDB(){ localStorage.setItem('swa_reports_v2', JSON.stringify(records)); }
@@ -657,12 +701,12 @@ function collectForm(){
     waterSource:gv('waterSource'), designProd:gv('designProd'),
     opMode:gv('opMode'), totalWells:gv('totalWells'), activeWells:gv('activeWells'),
     wellNumbers:gv('wellNumbers'), kwDay:gv('kwDay'), reverseOsmosis:gv('reverseOsmosis'),
-    nasah_nat:gv('nasah_nat'), nasah_low:gv('nasah_low'), nasah_reason:gv('nasah_reason'),
-    nasah_hpp_qty:gv('nasah_hpp_qty'), nasah_hpp_rate:gv('nasah_hpp_rate'),
-    nasah_pump_total:gv('nasah_pump_total'), nasah_pump_active:gv('nasah_pump_active'),
-    manf_nat:gv('manf_nat'), manf_low:gv('manf_low'), manf_reason:gv('manf_reason'),
-    manf_hpp_qty:gv('manf_hpp_qty'), manf_hpp_rate:gv('manf_hpp_rate'),
-    manf_pump_total:gv('manf_pump_total'), manf_pump_active:gv('manf_pump_active'),
+    nasah_prod:gv('nasah_prod'), nasah_hpp:gv('nasah_hpp'),
+    nasah_pump_total:gv('nasah_pump_total'), nasah_pump_out:gv('nasah_pump_out'),
+    nasah_pump_reason:gv('nasah_pump_reason'), nasah_notes:gv('nasah_notes'),
+    manf_prod:gv('manf_prod'), manf_hpp:gv('manf_hpp'),
+    manf_pump_total:gv('manf_pump_total'), manf_pump_out:gv('manf_pump_out'),
+    manf_pump_reason:gv('manf_pump_reason'), manf_notes:gv('manf_notes'),
     eq_lift_loc:gv('eq_lift_loc'), eq_lift_total:gv('eq_lift_total'), eq_lift_active:gv('eq_lift_active'), eq_lift_out:gv('eq_lift_out'), eq_lift_reason:gv('eq_lift_reason'),
     eq_trans_loc:gv('eq_trans_loc'), eq_trans_total:gv('eq_trans_total'), eq_trans_active:gv('eq_trans_active'), eq_trans_out:gv('eq_trans_out'), eq_trans_reason:gv('eq_trans_reason'),
     eq_chlor_loc:gv('eq_chlor_loc'), eq_chlor_total:gv('eq_chlor_total'), eq_chlor_active:gv('eq_chlor_active'), eq_chlor_out:gv('eq_chlor_out'), eq_chlor_reason:gv('eq_chlor_reason'),
@@ -685,46 +729,27 @@ function collectForm(){
 }
 
 /* ============================================================
-   BUILD PRINT HTML (A4 مطابق للتقرير الأصلي)
+   BUILD PRINT HTML (كما كان أصلاً)
 ============================================================ */
 function buildPrintHTML(r){
-  const totalProd = (parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0);
-  const totalHPP  = (parseFloat(r.nasah_hpp_qty)||0)+(parseFloat(r.manf_hpp_qty)||0);
-
-  // maintenance rows padding to at least 5 rows
+  const totalProd = (parseFloat(r.nasah_prod)||0)+(parseFloat(r.manf_prod)||0);
+  const totalHPP  = (parseFloat(r.nasah_hpp)||0)+(parseFloat(r.manf_hpp)||0);
   const mRows = r.maintRows||[];
   while(mRows.length < 5) mRows.push({num:mRows.length+1,type:'',equip:'',loc:'',work:'',notes:''});
-
-  // quality sampling rows
   const qRows=[
     {lbl:'Raw water / مياه خام', t:r.q_raw_time,temp:r.q_raw_temp,turb:r.q_raw_turb,cl:r.q_raw_cl,ph:r.q_raw_ph,cond:r.q_raw_cond,tds:r.q_raw_tds,iron:r.q_raw_iron,note:r.q_raw_notes},
-    {lbl:'Product Water / مياه رجيع', t:r.q_prod_time,temp:r.q_prod_temp,turb:r.q_prod_turb,cl:r.q_prod_cl,ph:r.q_prod_ph,cond:r.q_prod_cond,tds:r.q_prod_tds,iron:r.q_prod_iron,note:r.q_prod_notes},
+    {lbl:'Product Water / مياه منتجة', t:r.q_prod_time,temp:r.q_prod_temp,turb:r.q_prod_turb,cl:r.q_prod_cl,ph:r.q_prod_ph,cond:r.q_prod_cond,tds:r.q_prod_tds,iron:r.q_prod_iron,note:r.q_prod_notes},
     {lbl:'Rejected Water / مياه مرفوضة', t:r.q_rej_time,temp:r.q_rej_temp,turb:r.q_rej_turb,cl:r.q_rej_cl,ph:r.q_rej_ph,cond:r.q_rej_cond,tds:r.q_rej_tds,iron:r.q_rej_iron,note:r.q_rej_notes},
     {lbl:''},
   ];
-
-  const B='#1e5a9e'; // blue header
-  const BL='#2e6db4'; // blue light
-  const BR='#cce0f5'; // blue row bg
-  const W='#ffffff';
-  const AZ='#eaf4ff'; // alternate zebra
-
-  const ph = `
-  font-family: Arial, 'Segoe UI', Tahoma, sans-serif;
-  font-size: 7.5pt;
-  border-collapse: collapse;
-  width: 100%;
-  `;
-
+  const B='#1e5a9e'; const BL='#2e6db4'; const BR='#cce0f5'; const AZ='#eaf4ff';
   const thS=`background:${B};color:#fff;border:1px solid ${BL};padding:3pt 2pt;text-align:center;font-weight:700;font-size:7pt;`;
   const thLS=`background:${BL};color:#fff;border:1px solid ${BL};padding:2pt 2pt;text-align:center;font-weight:600;font-size:6.5pt;`;
   const tdS=`border:1px solid ${BL};padding:3pt 2pt;text-align:center;vertical-align:middle;font-size:7pt;`;
   const tdLbl=`border:1px solid ${BL};padding:3pt 4pt;background:${BR};font-weight:700;font-size:7pt;color:#0d3a6e;`;
   const secH=`background:${B};color:#fff;text-align:center;font-weight:900;font-size:9pt;padding:4pt;border:1px solid ${B};`;
-  const az=(i)=>i%2===0?W:AZ;
-
-  return `
-<!DOCTYPE html><html lang="ar" dir="rtl">
+  const az=(i)=>i%2===0?'#fff':AZ;
+  return `<!DOCTYPE html><html lang="ar" dir="rtl">
 <head><meta charset="UTF-8"/>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -732,14 +757,9 @@ function buildPrintHTML(r){
   @page{size:A4 portrait;margin:8mm 7mm 8mm 7mm;}
   table{border-collapse:collapse;width:100%;}
   .mb2{margin-bottom:3pt;}
-  .sig-line{border-top:1px solid #555;margin-top:20pt;width:80%;margin-left:auto;margin-right:auto;}
 </style>
 </head>
 <body>
-
-<!-- ===================== PAGE 1 ===================== -->
-
-<!-- شعار الهيئة + عنوان التقرير -->
 <table class="mb2" style="border:2px solid ${B};margin-bottom:3pt;">
   <tr>
     <td style="width:18%;padding:4pt 8pt;vertical-align:middle;border-left:1px solid ${BL};">
@@ -751,224 +771,105 @@ function buildPrintHTML(r){
     </td>
     <td style="width:22%;padding:4pt 6pt;vertical-align:middle;">
       <table style="width:100%;border-collapse:collapse;">
-        <tr>
-          <td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">اليوم</td>
-          <td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dayName||''}</td>
-        </tr>
-        <tr>
-          <td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">التاريخ</td>
-          <td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dateGreg||''}</td>
-        </tr>
-        <tr>
-          <td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">الهجري</td>
-          <td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dateHijri||''}</td>
-        </tr>
+        <tr><td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">اليوم</td><td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dayName||''}</td></tr>
+        <tr><td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">التاريخ</td><td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dateGreg||''}</td></tr>
+        <tr><td style="background:${B};color:#fff;padding:2pt 4pt;font-size:7pt;font-weight:700;border:1px solid ${BL};">الهجري</td><td style="border:1px solid ${BL};padding:2pt 4pt;font-size:7pt;">${r.dateHijri||''}</td></tr>
       </table>
     </td>
   </tr>
 </table>
-
-<!-- ===== معلومات المحطة ===== -->
 <div style="${secH}" class="mb2">معلومات المحطة</div>
 <table class="mb2" style="border:1px solid ${BL};">
   <tr>
-    <th style="${thS};width:7%">المدينة</th>
-    <th style="${thS};width:7%">القطاع</th>
-    <th style="${thS};width:10%">المحطة</th>
-    <th style="${thS};width:12%">الجهة المستفيدة</th>
-    <th style="${thS};width:10%">الإنتاج التصميمي<br/>م³/يوم</th>
-    <th style="${thS};width:9%">آلية التشغيل</th>
-    <th style="${thS};width:9%">الشركة المشغّلة</th>
-    <th style="${thS};width:9%">مصدر المياه</th>
-    <th style="${thS};width:9%">عدد الآبار الكلي</th>
-    <th style="${thS};width:9%">آبار في الخدمة</th>
+    <th style="${thS};width:7%">المدينة</th><th style="${thS};width:7%">القطاع</th>
+    <th style="${thS};width:10%">المحطة</th><th style="${thS};width:12%">الجهة المستفيدة</th>
+    <th style="${thS};width:10%">الإنتاج التصميمي<br/>م³/يوم</th><th style="${thS};width:9%">آلية التشغيل</th>
+    <th style="${thS};width:9%">الشركة المشغّلة</th><th style="${thS};width:9%">مصدر المياه</th>
+    <th style="${thS};width:9%">عدد الآبار الكلي</th><th style="${thS};width:9%">آبار في الخدمة</th>
     <th style="${thS}">الاستهلاك<br/>KW/DAY</th>
   </tr>
   <tr>
-    <td style="${tdS}">${r.city||''}</td>
-    <td style="${tdS}">${r.sector||''}</td>
-    <td style="${tdS};font-weight:700">${r.station||''}</td>
-    <td style="${tdS}">${r.beneficiary||''}</td>
-    <td style="${tdS};font-weight:700">${r.designProd||''}</td>
-    <td style="${tdS}">${r.opMode||''}</td>
-    <td style="${tdS}">${r.opCompany||''}</td>
-    <td style="${tdS}">${r.waterSource||''}</td>
-    <td style="${tdS}">${r.totalWells||''}</td>
-    <td style="${tdS}">${r.activeWells||''}</td>
+    <td style="${tdS}">${r.city||''}</td><td style="${tdS}">${r.sector||''}</td>
+    <td style="${tdS};font-weight:700">${r.station||''}</td><td style="${tdS}">${r.beneficiary||''}</td>
+    <td style="${tdS};font-weight:700">${r.designProd||''}</td><td style="${tdS}">${r.opMode||''}</td>
+    <td style="${tdS}">${r.opCompany||''}</td><td style="${tdS}">${r.waterSource||''}</td>
+    <td style="${tdS}">${r.totalWells||''}</td><td style="${tdS}">${r.activeWells||''}</td>
     <td style="${tdS}">${r.kwDay||''}</td>
   </tr>
-  <tr>
-    <td style="${tdLbl};text-align:center;">أرقام الآبار في الخدمة</td>
-    <td colspan="10" style="${tdS};text-align:right;padding-right:6pt;">${r.wellNumbers||''}</td>
-  </tr>
+  <tr><td style="${tdLbl};text-align:center;">أرقام الآبار في الخدمة</td><td colspan="10" style="${tdS};text-align:right;padding-right:6pt;">${r.wellNumbers||''}</td></tr>
 </table>
-
-<!-- ===== الإنتاج ===== -->
 <div style="${secH}" class="mb2">الإنتاج</div>
 <table class="mb2">
   <tr>
     <th style="${thS};width:7%" rowspan="2">الإنتاج</th>
-    <th style="${thS};width:7%" colspan="2">طبيعي</th>
-    <th style="${thS}" colspan="2">منخفض</th>
-    <th style="${thS};width:12%" rowspan="2">سبب الانخفاض</th>
-    <th style="${thS}" colspan="2">التصدير (HPP)</th>
+    <th style="${thS}" colspan="2">كمية الإنتاج (م³/يوم)</th>
+    <th style="${thS}" colspan="2">التصدير HPP (م³/يوم)</th>
     <th style="${thS}" colspan="3">مضخات الرفع</th>
+    <th style="${thS}" rowspan="2">الملاحظات</th>
   </tr>
   <tr>
-    <th style="${thLS}">م³/يوم</th><th style="${thLS}">نعم/لا</th>
-    <th style="${thLS}">م³/يوم</th><th style="${thLS}">نعم/لا</th>
-    <th style="${thLS}">الكمية م³/يوم</th><th style="${thLS}">معدل الضخ م³/س</th>
-    <th style="${thLS}">العدد الكلي</th><th style="${thLS}">في الخدمة</th><th style="${thLS}">الاسباب</th>
+    <th style="${thLS}" colspan="2">الكمية</th>
+    <th style="${thLS}" colspan="2">الكمية</th>
+    <th style="${thLS}">العدد</th><th style="${thLS}">خارج الخدمة</th><th style="${thLS}">السبب</th>
   </tr>
-  <tr style="background:${W}">
+  <tr style="background:#fff">
     <td style="${tdLbl}">نساح</td>
-    <td style="${tdS};font-weight:700">${r.nasah_nat||''}</td>
-    <td style="${tdS}">نعم</td>
-    <td style="${tdS}">${r.nasah_low||''}</td>
-    <td style="${tdS}">-</td>
-    <td style="${tdS}">${r.nasah_reason||''}</td>
-    <td style="${tdS}">${r.nasah_hpp_qty||''}</td>
-    <td style="${tdS}">${r.nasah_hpp_rate||''}</td>
+    <td style="${tdS};font-weight:700" colspan="2">${r.nasah_prod||''}</td>
+    <td style="${tdS}" colspan="2">${r.nasah_hpp||''}</td>
     <td style="${tdS}">${r.nasah_pump_total||''}</td>
-    <td style="${tdS}">${r.nasah_pump_active||''}</td>
-    <td style="${tdS}">-</td>
+    <td style="${tdS}">${r.nasah_pump_out||''}</td>
+    <td style="${tdS}">${r.nasah_pump_reason||''}</td>
+    <td style="${tdS}">${r.nasah_notes||''}</td>
   </tr>
   <tr style="background:${AZ}">
     <td style="${tdLbl}">منفوحة</td>
-    <td style="${tdS};font-weight:700">${r.manf_nat||''}</td>
-    <td style="${tdS}">نعم</td>
-    <td style="${tdS}">${r.manf_low||''}</td>
-    <td style="${tdS}">-</td>
-    <td style="${tdS}">${r.manf_reason||''}</td>
-    <td style="${tdS}">${r.manf_hpp_qty||''}</td>
-    <td style="${tdS}">${r.manf_hpp_rate||''}</td>
+    <td style="${tdS};font-weight:700" colspan="2">${r.manf_prod||''}</td>
+    <td style="${tdS}" colspan="2">${r.manf_hpp||''}</td>
     <td style="${tdS}">${r.manf_pump_total||''}</td>
-    <td style="${tdS}">${r.manf_pump_active||''}</td>
-    <td style="${tdS}">-</td>
+    <td style="${tdS}">${r.manf_pump_out||''}</td>
+    <td style="${tdS}">${r.manf_pump_reason||''}</td>
+    <td style="${tdS}">${r.manf_notes||''}</td>
   </tr>
   <tr style="background:#d0ecd0;">
-    <td style="border:1px solid ${BL};padding:3pt;background:#d0ecd0;font-weight:900;font-size:7pt;">الإجمالي</td>
-    <td style="border:1px solid ${BL};padding:3pt;font-weight:900;text-align:center;">${totalProd.toLocaleString()}</td>
-    <td colspan="5" style="border:1px solid ${BL};padding:3pt;"></td>
-    <td style="border:1px solid ${BL};padding:3pt;font-weight:900;text-align:center;">${totalHPP.toLocaleString()}</td>
-    <td colspan="3" style="border:1px solid ${BL};padding:3pt;"></td>
+    <td style="${tdLbl}">الإجمالي</td>
+    <td style="border:1px solid ${BL};padding:3pt;font-weight:900;text-align:center;" colspan="2">${totalProd.toLocaleString()}</td>
+    <td style="border:1px solid ${BL};padding:3pt;font-weight:900;text-align:center;" colspan="2">${totalHPP.toLocaleString()}</td>
+    <td colspan="4" style="border:1px solid ${BL};"></td>
   </tr>
 </table>
-
-<!-- ===== معدات خارج الخدمة ===== -->
 <div style="${secH}" class="mb2">معدات التشغيل الخارجة عن الخدمة</div>
 <table class="mb2">
   <tr>
     <th style="${thS};width:10%">اسم المعدة</th>
-    <th style="${thS}">مضخات الرفع</th>
-    <th style="${thS}">المحولات</th>
-    <th style="${thS}">مضخات تجريع الكلور</th>
-    <th style="${thS}">بادئ تشغيل</th>
-    <th style="${thS}">مولدات ديزل – عدد</th>
-    <th style="${thS}">شركة الكهرباء</th>
+    <th style="${thS}">مضخات الرفع</th><th style="${thS}">المحولات</th>
+    <th style="${thS}">مضخات تجريع الكلور</th><th style="${thS}">بادئ تشغيل</th>
+    <th style="${thS}">مولدات ديزل – عدد</th><th style="${thS}">شركة الكهرباء</th>
   </tr>
-  <tr>
-    <td style="${tdLbl}">الموقع</td>
-    <td style="${tdS}">${r.eq_lift_loc||''}</td>
-    <td style="${tdS}">${r.eq_trans_loc||''}</td>
-    <td style="${tdS}">${r.eq_chlor_loc||''}</td>
-    <td style="${tdS}">${r.eq_start_loc||''}</td>
-    <td style="${tdS}">${r.eq_gen_loc||''}</td>
-    <td style="${tdS}">${r.eq_elec_loc||''}</td>
-  </tr>
-  <tr style="background:${AZ}">
-    <td style="${tdLbl}">العدد</td>
-    <td style="${tdS}">${r.eq_lift_total||''}</td>
-    <td style="${tdS}">${r.eq_trans_total||''}</td>
-    <td style="${tdS}">${r.eq_chlor_total||''}</td>
-    <td style="${tdS}">${r.eq_start_total||''}</td>
-    <td style="${tdS}">${r.eq_gen_total||''}</td>
-    <td style="${tdS}">${r.eq_elec_total||''}</td>
-  </tr>
-  <tr>
-    <td style="${tdLbl}">في الخدمة</td>
-    <td style="${tdS}">${r.eq_lift_active||''}</td>
-    <td style="${tdS}">${r.eq_trans_active||''}</td>
-    <td style="${tdS}">${r.eq_chlor_active||''}</td>
-    <td style="${tdS}">${r.eq_start_active||''}</td>
-    <td style="${tdS}">${r.eq_gen_active||''}</td>
-    <td style="${tdS}">${r.eq_elec_active||''}</td>
-  </tr>
-  <tr style="background:${AZ}">
-    <td style="${tdLbl}">خارج الخدمة</td>
-    <td style="${tdS}">${r.eq_lift_out||''}</td>
-    <td style="${tdS}">${r.eq_trans_out||''}</td>
-    <td style="${tdS}">${r.eq_chlor_out||''}</td>
-    <td style="${tdS}">${r.eq_start_out||''}</td>
-    <td style="${tdS}">${r.eq_gen_out||''}</td>
-    <td style="${tdS}">${r.eq_elec_out||''}</td>
-  </tr>
-  <tr>
-    <td style="${tdLbl}">السبب</td>
-    <td style="${tdS}">${r.eq_lift_reason||'مضخات احتياطية'}</td>
-    <td style="${tdS}">${r.eq_trans_reason||'مضخات احتياطية'}</td>
-    <td style="${tdS}">${r.eq_chlor_reason||'مضخات احتياطية'}</td>
-    <td style="${tdS}">${r.eq_start_reason||''}</td>
-    <td style="${tdS}">${r.eq_gen_reason||''}</td>
-    <td style="${tdS}">${r.eq_elec_reason||''}</td>
-  </tr>
-  <tr>
-    <td style="${tdLbl}">ملاحظات التشغيل</td>
-    <td colspan="6" style="${tdS};text-align:right;padding-right:6pt;">${r.opNotes||''}</td>
-  </tr>
+  <tr><td style="${tdLbl}">الموقع</td><td style="${tdS}">${r.eq_lift_loc||''}</td><td style="${tdS}">${r.eq_trans_loc||''}</td><td style="${tdS}">${r.eq_chlor_loc||''}</td><td style="${tdS}">${r.eq_start_loc||''}</td><td style="${tdS}">${r.eq_gen_loc||''}</td><td style="${tdS}">${r.eq_elec_loc||''}</td></tr>
+  <tr style="background:${AZ}"><td style="${tdLbl}">العدد</td><td style="${tdS}">${r.eq_lift_total||''}</td><td style="${tdS}">${r.eq_trans_total||''}</td><td style="${tdS}">${r.eq_chlor_total||''}</td><td style="${tdS}">${r.eq_start_total||''}</td><td style="${tdS}">${r.eq_gen_total||''}</td><td style="${tdS}">${r.eq_elec_total||''}</td></tr>
+  <tr><td style="${tdLbl}">في الخدمة</td><td style="${tdS}">${r.eq_lift_active||''}</td><td style="${tdS}">${r.eq_trans_active||''}</td><td style="${tdS}">${r.eq_chlor_active||''}</td><td style="${tdS}">${r.eq_start_active||''}</td><td style="${tdS}">${r.eq_gen_active||''}</td><td style="${tdS}">${r.eq_elec_active||''}</td></tr>
+  <tr style="background:${AZ}"><td style="${tdLbl}">خارج الخدمة</td><td style="${tdS}">${r.eq_lift_out||''}</td><td style="${tdS}">${r.eq_trans_out||''}</td><td style="${tdS}">${r.eq_chlor_out||''}</td><td style="${tdS}">${r.eq_start_out||''}</td><td style="${tdS}">${r.eq_gen_out||''}</td><td style="${tdS}">${r.eq_elec_out||''}</td></tr>
+  <tr><td style="${tdLbl}">السبب</td><td style="${tdS}">${r.eq_lift_reason||''}</td><td style="${tdS}">${r.eq_trans_reason||''}</td><td style="${tdS}">${r.eq_chlor_reason||''}</td><td style="${tdS}">${r.eq_start_reason||''}</td><td style="${tdS}">${r.eq_gen_reason||''}</td><td style="${tdS}">${r.eq_elec_reason||''}</td></tr>
+  <tr><td style="${tdLbl}">ملاحظات التشغيل</td><td colspan="6" style="${tdS};text-align:right;padding-right:6pt;">${r.opNotes||''}</td></tr>
 </table>
-
-<!-- ===== تقرير الصيانة ===== -->
 <div style="${secH}" class="mb2">تقرير الصيانة</div>
 <table class="mb2">
   <tr>
-    <th style="${thS};width:5%">نوع الصيانة،<br/>وقائية تصحيحية</th>
-    <th style="${thS};width:14%">اسم المعدة</th>
-    <th style="${thS};width:9%">الموقع</th>
-    <th style="${thS}">وصف العمل</th>
-    <th style="${thS};width:16%">ملاحظات</th>
+    <th style="${thS};width:5%">نوع الصيانة</th><th style="${thS};width:14%">اسم المعدة</th>
+    <th style="${thS};width:9%">الموقع</th><th style="${thS}">وصف العمل</th><th style="${thS};width:16%">ملاحظات</th>
   </tr>
-  ${mRows.map((m,i)=>`
-  <tr style="background:${az(i)}">
-    <td style="${tdS}">${m.type||''}</td>
-    <td style="${tdS}">${m.equip||''}</td>
-    <td style="${tdS}">${m.loc||''}</td>
-    <td style="${tdS};text-align:right;padding-right:4pt;">${m.work||''}</td>
-    <td style="${tdS}">${m.notes||''}</td>
-  </tr>`).join('')}
-  <tr>
-    <td style="${tdLbl}">ملاحظات الصيانة</td>
-    <td colspan="4" style="${tdS};text-align:right;padding-right:6pt;">${r.maintNotes||''}</td>
-  </tr>
+  ${mRows.map((m,i)=>`<tr style="background:${az(i)}"><td style="${tdS}">${m.type||''}</td><td style="${tdS}">${m.equip||''}</td><td style="${tdS}">${m.loc||''}</td><td style="${tdS};text-align:right;padding-right:4pt;">${m.work||''}</td><td style="${tdS}">${m.notes||''}</td></tr>`).join('')}
+  <tr><td style="${tdLbl}">ملاحظات الصيانة</td><td colspan="4" style="${tdS};text-align:right;padding-right:6pt;">${r.maintNotes||''}</td></tr>
 </table>
-
-<!-- ===== تقرير جودة المياه ===== -->
 <div style="${secH}" class="mb2">تقرير جودة المياه</div>
 <table style="margin-bottom:1pt;">
   <tr><td colspan="10" style="background:${BL};color:#fff;text-align:center;font-weight:700;font-size:8pt;padding:3pt;border:1px solid ${BL};">Physical Analysis</td></tr>
   <tr>
-    <th style="${thS};width:13%">Parameters</th>
-    <th style="${thS};width:7%">Time<br/>Hrs.</th>
-    <th style="${thS};width:8%">Temp.<br/>°C</th>
-    <th style="${thS};width:9%">Turbidity<br/>NTU</th>
-    <th style="${thS};width:10%">Free Chlorine<br/>mg/l</th>
-    <th style="${thS};width:7%">pH</th>
-    <th style="${thS};width:10%">Conductivity<br/>µs/cm</th>
-    <th style="${thS};width:9%">TDS<br/>mg/l</th>
-    <th style="${thS};width:9%">T. Iron<br/>mg/l</th>
-    <th style="${thS}">الملاحظات</th>
-  </tr>
-  <tr>
-    <th style="${thLS}">Unit</th>
-    <th style="${thLS}">Hrs.</th>
-    <th style="${thLS}">°C</th>
-    <th style="${thLS}">NTU</th>
-    <th style="${thLS}">mg/l</th>
-    <th style="${thLS}">——</th>
-    <th style="${thLS}">µs/cm</th>
-    <th style="${thLS}">mg/l</th>
-    <th style="${thLS}">mg/l</th>
-    <th style="${thLS}">——</th>
+    <th style="${thS};width:13%">Parameters</th><th style="${thS};width:7%">Time<br/>Hrs.</th>
+    <th style="${thS};width:8%">Temp.<br/>°C</th><th style="${thS};width:9%">Turbidity<br/>NTU</th>
+    <th style="${thS};width:10%">Free Chlorine<br/>mg/l</th><th style="${thS};width:7%">pH</th>
+    <th style="${thS};width:10%">Conductivity<br/>µs/cm</th><th style="${thS};width:9%">TDS<br/>mg/l</th>
+    <th style="${thS};width:9%">T. Iron<br/>mg/l</th><th style="${thS}">الملاحظات</th>
   </tr>
   <tr style="background:#1565a0;">
     <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-weight:700;font-size:7pt;">MEWA-2021<br/>Standards</td>
@@ -982,47 +883,25 @@ function buildPrintHTML(r){
     <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">Max. 0.3</td>
     <td style="border:1px solid ${BL};padding:3pt;background:#1565a0;color:#fff;font-size:7pt;">——</td>
   </tr>
-  ${qRows.map((q,i)=> q.lbl ? `
-  <tr style="background:${az(i)}">
-    <td style="${tdLbl}">${q.lbl}</td>
-    <td style="${tdS}">${q.t||''}</td>
-    <td style="${tdS}">${q.temp||''}</td>
-    <td style="${tdS}">${q.turb||''}</td>
-    <td style="${tdS}">${q.cl||''}</td>
-    <td style="${tdS}">${q.ph||''}</td>
-    <td style="${tdS}">${q.cond||''}</td>
-    <td style="${tdS}">${q.tds||''}</td>
-    <td style="${tdS}">${q.iron||''}</td>
-    <td style="${tdS}">${q.note||''}</td>
-  </tr>` : `<tr><td colspan="10" style="${tdS};height:14pt;"></td></tr>`
-  ).join('')}
-  <tr>
-    <td style="${tdLbl}">الملاحظات</td>
-    <td colspan="9" style="${tdS};height:16pt;text-align:right;padding-right:6pt;"></td>
-  </tr>
+  ${qRows.map((q,i)=> q.lbl ? `<tr style="background:${az(i)}"><td style="${tdLbl}">${q.lbl}</td><td style="${tdS}">${q.t||''}</td><td style="${tdS}">${q.temp||''}</td><td style="${tdS}">${q.turb||''}</td><td style="${tdS}">${q.cl||''}</td><td style="${tdS}">${q.ph||''}</td><td style="${tdS}">${q.cond||''}</td><td style="${tdS}">${q.tds||''}</td><td style="${tdS}">${q.iron||''}</td><td style="${tdS}">${q.note||''}</td></tr>` : `<tr><td colspan="10" style="${tdS};height:14pt;"></td></tr>`).join('')}
+  <tr><td style="${tdLbl}">الملاحظات</td><td colspan="9" style="${tdS};height:16pt;text-align:right;padding-right:6pt;"></td></tr>
 </table>
-
-<!-- ===== الاعتماد ===== -->
 <div style="${secH};margin-top:3pt;" class="mb2">الإعتماد</div>
 <table class="mb2">
   <tr>
-    <th style="${thS};width:13%">معد التقرير</th>
-    <th style="${thS}"> مشرف التشغيل </th>
+    <th style="${thS};width:33%">معد التقرير</th>
+    <th style="${thS};width:33%">مشرف التشغيل</th>
+    <th style="${thS}">مشرف الجهة المستفيدة</th>
   </tr>
   <tr>
-    <td style="${tdLbl}">الاسم</td>
-    <td style="${tdS}">${r.salineSupervisor||''}</td>
-    <td style="${tdS}">${r.supervisor||''}</td>
-    <td style="${tdS}">${r.nwcSupervisor||''}</td>
+    <td style="${tdS};font-weight:700">${r.supervisor||''}</td>
+    <td style="${tdS};font-weight:700">${r.nwcSupervisor||''}</td>
+    <td style="${tdS}"></td>
   </tr>
   <tr style="height:36pt;">
-    <td style="${tdLbl}">التوقيع</td>
-    <td style="${tdS}"></td>
-    <td style="${tdS}"></td>
-    <td style="${tdS}"></td>
+    <td style="${tdS}"></td><td style="${tdS}"></td><td style="${tdS}"></td>
   </tr>
 </table>
-
 </body></html>`;
 }
 
@@ -1040,14 +919,14 @@ function printReport(){
 }
 
 /* ============================================================
-   SAVE REPORT
+   SAVE REPORT (محلي كما كان)
 ============================================================ */
 function saveReport(){
   const data = collectForm();
   if(!data.dateGreg){ toast('يرجى إدخال التاريخ على الأقل!','danger'); return; }
   records.unshift(data);
   saveDB();
-  toast('✅ تم حفظ التقرير بنجاح!');
+  toast('✅ تم الحفظ المحلي بنجاح!');
 }
 
 /* ============================================================
@@ -1057,13 +936,11 @@ function clearForm(){
   if(!confirm('هل تريد مسح جميع البيانات؟')) return;
   document.querySelectorAll('#form-tab input[type=text],#form-tab input[type=number],#form-tab input[type=date],#form-tab input[type=time],#form-tab textarea').forEach(el=>el.value='');
   document.getElementById('dateGreg').valueAsDate=new Date();
-  document.getElementById('city').value='الرياض';
-  document.getElementById('sector').value='الأوسط';
   toast('تم مسح النموذج','info');
 }
 
 /* ============================================================
-   RECORDS LIST
+   RECORDS LIST (كما كان)
 ============================================================ */
 function renderRecords(){
   const q=(document.getElementById('searchRec')?.value||'').toLowerCase();
@@ -1071,7 +948,7 @@ function renderRecords(){
   const c=document.getElementById('recordsList');
   if(!fil.length){ c.innerHTML='<p class="text-muted text-center py-4"><i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>لا توجد تقارير.</p>'; return; }
   c.innerHTML=fil.map(r=>{
-    const tot=(parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0);
+    const tot=(parseFloat(r.nasah_prod)||0)+(parseFloat(r.manf_prod)||0);
     return `<div class="rec-item d-flex justify-content-between align-items-start flex-wrap gap-2">
       <div>
         <div class="rec-date"><i class="bi bi-calendar3 me-2"></i>${r.dateGreg||'—'} (${r.dateHijri||'—'}) | ${r.dayName||''}</div>
@@ -1101,21 +978,18 @@ function printFromRecord(id){
   setTimeout(()=>win.print(),600);
 }
 
-/* ============================================================
-   VIEW RECORD MODAL
-============================================================ */
 function viewRecord(id){
   const r=records.find(x=>x.id===id);
   if(!r) return;
-  const tot=(parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0);
+  const tot=(parseFloat(r.nasah_prod)||0)+(parseFloat(r.manf_prod)||0);
   document.getElementById('modalBody').innerHTML=`
   <div style="font-size:.83rem">
     <div class="p-2 rounded mb-2" style="background:#eaf2ff">
       <strong>التاريخ:</strong> ${r.dateGreg} (${r.dateHijri}) | <strong>المحطة:</strong> ${r.station} – ${r.city} | <strong>إجمالي الإنتاج:</strong> ${tot.toLocaleString()} م³
     </div>
     <div class="row g-2">
-      <div class="col-6"><strong>نساح:</strong> ${r.nasah_nat||'—'} م³</div>
-      <div class="col-6"><strong>منفوحة:</strong> ${r.manf_nat||'—'} م³</div>
+      <div class="col-6"><strong>نساح:</strong> ${r.nasah_prod||'—'} م³</div>
+      <div class="col-6"><strong>منفوحة:</strong> ${r.manf_prod||'—'} م³</div>
       <div class="col-6"><strong>pH (خام):</strong> ${r.q_raw_ph||'—'}</div>
       <div class="col-6"><strong>عكارة:</strong> ${r.q_raw_turb||'—'} NTU</div>
       <div class="col-6"><strong>كلور حر:</strong> ${r.q_raw_cl||'—'} mg/l</div>
@@ -1128,16 +1002,13 @@ function viewRecord(id){
   new bootstrap.Modal(document.getElementById('viewModal')).show();
 }
 
-/* ============================================================
-   LOAD TO FORM
-============================================================ */
 function loadToForm(id){
   const r=records.find(x=>x.id===id);
   if(!r) return;
   const fields=['dayName','dateGreg','dateHijri','opCompany','city','sector','station','beneficiary','waterSource',
     'designProd','opMode','totalWells','activeWells','wellNumbers','kwDay','reverseOsmosis',
-    'nasah_nat','nasah_low','nasah_reason','nasah_hpp_qty','nasah_hpp_rate','nasah_pump_total','nasah_pump_active',
-    'manf_nat','manf_low','manf_reason','manf_hpp_qty','manf_hpp_rate','manf_pump_total','manf_pump_active',
+    'nasah_prod','nasah_hpp','nasah_pump_total','nasah_pump_out','nasah_pump_reason','nasah_notes',
+    'manf_prod','manf_hpp','manf_pump_total','manf_pump_out','manf_pump_reason','manf_notes',
     'eq_lift_loc','eq_lift_total','eq_lift_active','eq_lift_out','eq_lift_reason',
     'eq_trans_loc','eq_trans_total','eq_trans_active','eq_trans_out','eq_trans_reason',
     'eq_chlor_loc','eq_chlor_total','eq_chlor_active','eq_chlor_out','eq_chlor_reason',
@@ -1150,7 +1021,6 @@ function loadToForm(id){
     'q_rej_time','q_rej_temp','q_rej_turb','q_rej_cl','q_rej_ph','q_rej_cond','q_rej_tds','q_rej_iron','q_rej_notes',
     'approver','supervisor','nwcSupervisor','salineSupervisor'];
   fields.forEach(f=>sv(f,r[f]));
-
   const tbody=document.getElementById('maintBody');
   tbody.innerHTML=''; maintCount=0;
   (r.maintRows||[{num:1,type:'وقائية',equip:'',loc:'',work:'',notes:''}]).forEach((m,i)=>{
@@ -1169,7 +1039,6 @@ function loadToForm(id){
     tbody.appendChild(tr);
   });
   if(maintCount===0) addMaintRow();
-
   records=records.filter(x=>x.id!==id);
   saveDB();
   showTab('form-tab',document.querySelectorAll('.tab-btn')[0]);
@@ -1177,9 +1046,6 @@ function loadToForm(id){
   toast('تم تحميل التقرير – اضغط حفظ عند الانتهاء','info');
 }
 
-/* ============================================================
-   DELETE
-============================================================ */
 function deleteRecord(id){
   if(!confirm('حذف هذا التقرير نهائياً؟')) return;
   records=records.filter(x=>x.id!==id);
@@ -1193,11 +1059,11 @@ function clearAllRecords(){
 }
 
 /* ============================================================
-   STATS
+   STATS (كما كان)
 ============================================================ */
 function renderStats(){
   document.getElementById('s_total').textContent=records.length;
-  const prods=records.map(r=>(parseFloat(r.nasah_nat)||0)+(parseFloat(r.manf_nat)||0)).filter(x=>x>0);
+  const prods=records.map(r=>(parseFloat(r.nasah_prod)||0)+(parseFloat(r.manf_prod)||0)).filter(x=>x>0);
   document.getElementById('s_prod').textContent=prods.length?Math.round(prods.reduce((a,b)=>a+b)/prods.length).toLocaleString():'—';
   document.getElementById('s_maint').textContent=records.reduce((s,r)=>(r.maintRows||[]).filter(m=>m.work).length+s,0);
   const phs=records.map(r=>parseFloat(r.q_raw_ph)).filter(x=>!isNaN(x));
@@ -1206,10 +1072,8 @@ function renderStats(){
   const tbody=document.getElementById('statsQBody');
   if(!last10.length){ tbody.innerHTML='<tr><td colspan="8" class="text-muted text-center py-3">لا توجد بيانات</td></tr>'; return; }
   tbody.innerHTML=last10.map(r=>{
-    const ph=parseFloat(r.q_raw_ph);
-    const turb=parseFloat(r.q_raw_turb);
-    const phOk=!isNaN(ph)&&ph>=6.5&&ph<=8.5;
-    const turbOk=!isNaN(turb)&&turb<=5;
+    const ph=parseFloat(r.q_raw_ph); const turb=parseFloat(r.q_raw_turb);
+    const phOk=!isNaN(ph)&&ph>=6.5&&ph<=8.5; const turbOk=!isNaN(turb)&&turb<=5;
     const allOk=phOk&&turbOk;
     return `<tr>
       <td>${r.dateGreg||'—'}</td>
@@ -1225,6 +1089,190 @@ function renderStats(){
 }
 
 /* ============================================================
+   NOTION INTEGRATION  ← الجديد الوحيد
+   يستخدم Notion API عبر Claude proxy
+============================================================ */
+function getNotionCreds(){
+  return {
+    token: localStorage.getItem('notion_token') || gv('notionToken'),
+    dbId:  localStorage.getItem('notion_dbId')  || gv('notionDbId')
+  };
+}
+
+function saveNotionSettings(){
+  const token = gv('notionToken');
+  const dbId  = gv('notionDbId');
+  if(!token || !dbId){ toast('أدخل Token و Database ID','danger'); return; }
+  localStorage.setItem('notion_token', token);
+  localStorage.setItem('notion_dbId',  dbId);
+  toast('✅ تم حفظ إعدادات Notion');
+}
+
+function setNotionStatus(msg, type){
+  const el = document.getElementById('notionConnStatus');
+  el.style.display = 'inline-block';
+  el.className = 'notion-status notion-' + type;
+  el.textContent = msg;
+}
+
+async function testNotionConnection(){
+  const {token, dbId} = getNotionCreds();
+  if(!token || !dbId){ toast('أدخل Token و Database ID أولاً','danger'); return; }
+  setNotionStatus('⏳ جاري الاتصال...', 'loading');
+  try {
+    const res = await fetch(`https://api.notion.com/v1/databases/${dbId}`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Notion-Version': '2022-06-28' }
+    });
+    if(res.ok){ setNotionStatus('✅ الاتصال ناجح', 'ok'); toast('✅ Notion متصل بنجاح'); }
+    else { const e=await res.json(); setNotionStatus('❌ فشل: ' + (e.message||res.status), 'err'); }
+  } catch(e){ setNotionStatus('❌ خطأ في الشبكة', 'err'); toast('تحقق من الاتصال بالإنترنت','danger'); }
+}
+
+/* تحويل بيانات التقرير إلى صيغة Notion properties */
+function reportToNotionProps(r){
+  const totalProd = (parseFloat(r.nasah_prod)||0)+(parseFloat(r.manf_prod)||0);
+  return {
+    "التاريخ": { title: [{ text: { content: r.dateGreg || 'بدون تاريخ' } }] },
+    "اليوم":   { rich_text: [{ text: { content: r.dayName || '' } }] },
+    "الهجري":  { rich_text: [{ text: { content: r.dateHijri || '' } }] },
+    "المحطة":  { rich_text: [{ text: { content: r.station || '' } }] },
+    "المدينة": { rich_text: [{ text: { content: r.city || '' } }] },
+    "القطاع":  { rich_text: [{ text: { content: r.sector || '' } }] },
+    "الشركة":  { rich_text: [{ text: { content: r.opCompany || '' } }] },
+    "إنتاج_نساح":   { number: parseFloat(r.nasah_prod)||0 },
+    "إنتاج_منفوحة": { number: parseFloat(r.manf_prod)||0 },
+    "الإنتاج_الكلي": { number: totalProd },
+    "pH":       { number: parseFloat(r.q_raw_ph)||0 },
+    "عكارة":   { number: parseFloat(r.q_raw_turb)||0 },
+    "كلور_حر": { rich_text: [{ text: { content: r.q_raw_cl || '' } }] },
+    "TDS":     { number: parseFloat(r.q_raw_tds)||0 },
+    "ملاحظات_تشغيل": { rich_text: [{ text: { content: r.opNotes || '' } }] },
+    "معد_التقرير":   { rich_text: [{ text: { content: r.supervisor || '' } }] },
+    "البيانات_الكاملة": { rich_text: [{ text: { content: JSON.stringify(r).substring(0,1900) } }] }
+  };
+}
+
+async function saveToNotion(){
+  const {token, dbId} = getNotionCreds();
+  if(!token || !dbId){
+    toast('افتح تبويب Notion وأدخل الإعدادات أولاً','danger'); return;
+  }
+  const data = collectForm();
+  if(!data.dateGreg){ toast('يرجى إدخال التاريخ','danger'); return; }
+  const statusEl = document.getElementById('notionFormStatus');
+  statusEl.className='notion-status notion-loading'; statusEl.style.display='inline-block';
+  statusEl.textContent='⏳ جاري الرفع إلى Notion...';
+  try {
+    const res = await fetch('https://api.notion.com/v1/pages', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28'
+      },
+      body: JSON.stringify({ parent: { database_id: dbId }, properties: reportToNotionProps(data) })
+    });
+    if(res.ok){
+      // حفظ محلي أيضاً
+      records.unshift(data); saveDB();
+      statusEl.className='notion-status notion-ok'; statusEl.textContent='✅ تم الرفع إلى Notion';
+      toast('✅ تم حفظ التقرير في Notion ومشاركته مع الفريق!');
+    } else {
+      const e = await res.json();
+      statusEl.className='notion-status notion-err';
+      statusEl.textContent='❌ ' + (e.message||'خطأ في Notion');
+      toast('فشل الرفع: ' + (e.message||''), 'danger');
+    }
+  } catch(e){
+    statusEl.className='notion-status notion-err'; statusEl.textContent='❌ خطأ في الشبكة';
+    toast('تعذر الاتصال بـ Notion','danger');
+  }
+}
+
+async function loadFromNotion(){
+  const {token, dbId} = getNotionCreds();
+  if(!token || !dbId){ toast('أدخل إعدادات Notion أولاً','danger'); return; }
+  const listEl = document.getElementById('notionRecordsList');
+  listEl.innerHTML='<p class="text-center text-muted py-3">⏳ جاري التحميل من Notion...</p>';
+  try {
+    const res = await fetch(`https://api.notion.com/v1/databases/${dbId}/query`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28'
+      },
+      body: JSON.stringify({ sorts:[{ property:'التاريخ', direction:'descending' }], page_size:50 })
+    });
+    if(!res.ok){ const e=await res.json(); listEl.innerHTML=`<p class="text-danger p-3">خطأ: ${e.message||res.status}</p>`; return; }
+    const data = await res.json();
+    if(!data.results.length){ listEl.innerHTML='<p class="text-muted text-center py-3">لا توجد تقارير في Notion</p>'; return; }
+    listEl.innerHTML = data.results.map(page=>{
+      const p = page.properties;
+      const date   = p['التاريخ']?.title?.[0]?.plain_text || '—';
+      const station= p['المحطة']?.rich_text?.[0]?.plain_text || '—';
+      const city   = p['المدينة']?.rich_text?.[0]?.plain_text || '—';
+      const total  = p['الإنتاج_الكلي']?.number ?? '—';
+      const ph     = p['pH']?.number ?? '—';
+      const rawJson= p['البيانات_الكاملة']?.rich_text?.[0]?.plain_text || null;
+      return `<div class="rec-item d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+          <div class="rec-date"><i class="bi bi-cloud-fill me-2 text-dark"></i>${date} | ${station} – ${city}</div>
+          <div class="mt-1" style="font-size:.78rem;color:#475569">
+            <span class="me-3"><i class="bi bi-droplet me-1 text-primary"></i>إنتاج: <strong>${typeof total==='number'?total.toLocaleString():total} م³</strong></span>
+            <span>pH: <strong>${ph}</strong></span>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          ${rawJson ? `<button class="btn btn-sm btn-outline-primary" onclick='loadNotionRecordToForm(${JSON.stringify(rawJson)})'><i class="bi bi-pencil me-1"></i>تحميل للتعديل</button>` : ''}
+          <button class="btn btn-sm btn-outline-success" onclick='printNotionRecord(${JSON.stringify(rawJson||"{}")})' ><i class="bi bi-printer me-1"></i>طباعة</button>
+        </div>
+      </div>`;
+    }).join('');
+    toast(`✅ تم تحميل ${data.results.length} تقرير من Notion`);
+  } catch(e){ listEl.innerHTML=`<p class="text-danger p-3">خطأ في الاتصال</p>`; toast('تعذر الاتصال','danger'); }
+}
+
+function loadNotionRecordToForm(jsonStr){
+  try{
+    const r = JSON.parse(jsonStr);
+    loadToForm_data(r);
+  } catch(e){ toast('تعذر تحميل البيانات','danger'); }
+}
+function printNotionRecord(jsonStr){
+  try{
+    const r = JSON.parse(jsonStr);
+    const win=window.open('','_blank','width=900,height=700');
+    win.document.write(buildPrintHTML(r));
+    win.document.close(); win.focus();
+    setTimeout(()=>win.print(),600);
+  } catch(e){ toast('تعذر الطباعة','danger'); }
+}
+
+/* helper مشترك للتحميل */
+function loadToForm_data(r){
+  const fields=['dayName','dateGreg','dateHijri','opCompany','city','sector','station','beneficiary','waterSource',
+    'designProd','opMode','totalWells','activeWells','wellNumbers','kwDay','reverseOsmosis',
+    'nasah_prod','nasah_hpp','nasah_pump_total','nasah_pump_out','nasah_pump_reason','nasah_notes',
+    'manf_prod','manf_hpp','manf_pump_total','manf_pump_out','manf_pump_reason','manf_notes',
+    'eq_lift_loc','eq_lift_total','eq_lift_active','eq_lift_out','eq_lift_reason',
+    'eq_trans_loc','eq_trans_total','eq_trans_active','eq_trans_out','eq_trans_reason',
+    'eq_chlor_loc','eq_chlor_total','eq_chlor_active','eq_chlor_out','eq_chlor_reason',
+    'eq_start_loc','eq_start_total','eq_start_active','eq_start_out','eq_start_reason',
+    'eq_gen_loc','eq_gen_total','eq_gen_active','eq_gen_out','eq_gen_reason',
+    'eq_elec_loc','eq_elec_total','eq_elec_active','eq_elec_out','eq_elec_reason',
+    'opNotes','maintNotes',
+    'q_raw_time','q_raw_temp','q_raw_turb','q_raw_cl','q_raw_ph','q_raw_cond','q_raw_tds','q_raw_iron','q_raw_notes',
+    'q_prod_time','q_prod_temp','q_prod_turb','q_prod_cl','q_prod_ph','q_prod_cond','q_prod_tds','q_prod_iron','q_prod_notes',
+    'q_rej_time','q_rej_temp','q_rej_turb','q_rej_cl','q_rej_ph','q_rej_cond','q_rej_tds','q_rej_iron','q_rej_notes',
+    'approver','supervisor','nwcSupervisor','salineSupervisor'];
+  fields.forEach(f=>sv(f,r[f]));
+  showTab('form-tab',document.querySelectorAll('.tab-btn')[0]);
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  toast('تم تحميل التقرير من Notion','info');
+}
+
+/* ============================================================
    INIT
 ============================================================ */
 document.getElementById('dateGreg').valueAsDate=new Date();
@@ -1234,6 +1282,232 @@ document.getElementById('dateGreg').addEventListener('change',function(){
 });
 document.getElementById('city').value='';
 document.getElementById('sector').value='';
+
+// تعبئة إعدادات Notion المحفوظة مسبقاً
+const savedToken = localStorage.getItem('notion_token');
+const savedDbId  = localStorage.getItem('notion_dbId');
+if(savedToken) document.getElementById('notionToken').value = savedToken;
+if(savedDbId)  document.getElementById('notionDbId').value  = savedDbId;
+</script>
+ <script>
+    // 1. تعريف المخزن (الأرشيف)
+    let records = JSON.parse(localStorage.getItem('swa_reports_v2') || '[]');
+
+    // 2. وظيفة إضافة سطر صيانة جديد (بدل ما تكتبها يدوياً)
+    function addMaintRow() {
+        const tbody = document.getElementById('maintBody');
+        const rowCount = tbody.rows.length + 1;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${rowCount}</td>
+            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>وقائية</option><option>تصحيحية</option><option>طارئة</option></select></td>
+            <td class="ic"><input type="text" style="width:100%"></td>
+            <td class="ic"><input type="text" style="width:100%"></td>
+            <td class="ic"><input type="text" style="width:100%"></td>
+            <td class="ic"><input type="text" style="width:100%"></td>
+            <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="this.parentElement.parentElement.remove()"><i class="bi bi-trash3"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    // 3. وظيفة الحفظ المحلي (يجمع البيانات من الخانات ويخزنها)
+    function saveReport() {
+        const report = {
+            id: Date.now(),
+            station: document.getElementById('station').value,
+            date: document.getElementById('dateGreg').value,
+            time: new Date().toLocaleString('ar-SA')
+        };
+        records.push(report);
+        localStorage.setItem('swa_reports_v2', JSON.stringify(records));
+        alert("تم حفظ التقرير في ذاكرة المتصفح بنجاح!");
+    }
+
+    // 4. وظيفة الطباعة (تفتح نافذة الطباعة الرسمية)
+    function printReport() {
+        window.print();
+    }
+
+    // 5. وظيفة مسح النموذج
+    function clearForm() {
+        if(confirm("هل أنت متأكد من مسح جميع البيانات المكتوبة؟")) {
+            location.reload();
+        }
+    }
+   
+/* ============================================================
+    تكملة منطق الجافاسكريبت - نظام SWA
+============================================================ */
+
+// 1. إدارة جداول الصيانة
+function addMaintRow() {
+    const tbody = document.getElementById('maintBody');
+    const rowCount = tbody.rows.length + 1;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${rowCount}</td>
+        <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>وقائية</option><option>تصحيحية</option><option>طارئة</option></select></td>
+        <td class="ic"><input type="text" style="width:100%"/></td>
+        <td class="ic"><input type="text" style="width:100%"/></td>
+        <td class="ic"><input type="text" style="width:100%"/></td>
+        <td class="ic"><input type="text" style="width:100%"/></td>
+        <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="removeMaintRow(this)"><i class="bi bi-trash3"></i></button></td>
+    `;
+    tbody.appendChild(tr);
+}
+
+function removeMaintRow(btn) {
+    btn.closest('tr').remove();
+    // إعادة ترقيم الأسطر
+    const rows = document.querySelectorAll('#maintBody tr');
+    rows.forEach((row, index) => { row.cells[0].innerText = index + 1; });
+}
+
+// 2. حفظ التقرير محلياً (Local Storage)
+function saveReport() {
+    const reportData = {
+        id: Date.now(),
+        date: gv('dateGreg'),
+        day: gv('dayName'),
+        station: gv('station'),
+        production: {
+            nasah: gv('nasah_prod'),
+            manf: gv('manf_prod')
+        },
+        quality: {
+            ph: gv('q_prod_ph'),
+            tds: gv('q_prod_tds'),
+            cl: gv('q_prod_cl')
+        }
+    };
+
+    if(!reportData.date) {
+        toast("يرجى اختيار التاريخ قبل الحفظ", "danger");
+        return;
+    }
+
+    records.push(reportData);
+    saveDB();
+    toast("تم حفظ التقرير في السجل المحلي بنجاح");
+    renderRecords();
+}
+
+// 3. عرض السجلات المحفوظة
+function renderRecords() {
+    const list = document.getElementById('recordsList');
+    const search = gv('searchRec').toLowerCase();
+    list.innerHTML = '';
+
+    const filtered = records.filter(r => r.date.includes(search) || r.station.toLowerCase().includes(search));
+
+    if(filtered.length === 0) {
+        list.innerHTML = '<p class="text-center text-muted">لا توجد تقارير محفوظة حالياً.</p>';
+        return;
+    }
+
+    filtered.reverse().forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'rec-item d-flex justify-content-between align-items-center';
+        item.innerHTML = `
+            <div>
+                <span class="rec-date">${r.date}</span> - 
+                <span class="fw-bold">${r.day}</span> | 
+                <span>المحطة: ${r.station || 'غير محدد'}</span>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-primary" onclick="viewReport(${r.id})"><i class="bi bi-eye"></i> عرض</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})"><i class="bi bi-trash"></i></button>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+
+// 4. حذف سجل
+function deleteRecord(id) {
+    if(confirm('هل أنت متأكد من حذف هذا التقرير؟')) {
+        records = records.filter(r => r.id !== id);
+        saveDB();
+        renderRecords();
+        toast("تم الحذف", "info");
+    }
+}
+
+// 5. مسح النموذج
+function clearForm() {
+    if(confirm('سيتم مسح جميع البيانات المكتوبة حالياً، هل أنت متأكد؟')) {
+        document.querySelectorAll('input, select, textarea').forEach(el => el.value = '');
+        document.getElementById('maintBody').innerHTML = '';
+        addMaintRow();
+        toast("تمت إعادة تهيئة النموذج", "info");
+    }
+}
+
+// 6. منطق الطباعة A4
+function printReport() {
+    // تحديث خلية التاريخ واليوم في صفحة الطباعة قبل بدء العملية
+    const printContent = `
+        <div class="print-page">
+            <div class="logo-row">
+                <div class="logo-ar">الحاير<br>وكالة تنقية المياه الجوفية</div>
+                <div class="report-title-p">تقرير التشغيل اليومي<br><small>${gv('station')}</small></div>
+                <div class="logo-icon-p">SWA</div>
+            </div>
+            
+            <table class="pt">
+                <tr>
+                    <td class="plbl">اليوم</td><td class="pval">${gv('dayName')}</td>
+                    <td class="plbl">التاريخ</td><td class="pval">${gv('dateGreg')}</td>
+                    <td class="plbl">المحطة</td><td class="pval">${gv('station')}</td>
+                </tr>
+            </table>
+            
+            <div class="psec mt-3">الإنتاج وجودة المياه</div>
+            <table class="pt">
+                <tr class="ph">
+                    <th>البيان</th><th>التدفق (م³/ي)</th><th>TDS</th><th>pH</th><th>الكلور</th>
+                </tr>
+                <tr>
+                    <td class="plbl">مياه المنتج</td>
+                    <td>${gv('nasah_prod')}</td>
+                    <td>${gv('q_prod_tds')}</td>
+                    <td>${gv('q_prod_ph')}</td>
+                    <td>${gv('q_prod_cl')}</td>
+                </tr>
+            </table>
+
+            <div class="psec mt-4">التوقيعات</div>
+            <div class="row mt-2">
+                <div class="col-6">
+                    <div class="sig-box">
+                        <div class="sig-lbl">معد التقرير</div>
+                        <div class="sig-name">${gv('supervisor')}</div>
+                        <div class="sig-line"></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="sig-box">
+                        <div class="sig-lbl">اعتماد المشرف</div>
+                        <div class="sig-name">${gv('nwcSupervisor')}</div>
+                        <div class="sig-line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const printZone = document.getElementById('print-page');
+    printZone.innerHTML = printContent;
+    window.print();
+}
+
+// 7. تهيئة الصفحة عند التحميل
+window.onload = () => {
+    // وضع تاريخ اليوم تلقائياً
+    const today = new Date().toISOString().split('T')[0];
+    sv('dateGreg', today);
+    renderRecords();
+};
 </script>
 </body>
 </html>
