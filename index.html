@@ -284,45 +284,34 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
           <tr>
             <th rowspan="2" style="width:8%">الإنتاج</th>
             <th colspan="2">طبيعي (م³/يوم)</th>
-            <th colspan="2">منخفض</th>
-            <th>سبب الانخفاض</th>
             <th colspan="2">التصدير HPP</th>
             <th colspan="3">مضخات الرفع</th>
+            <th rowspan="2" style="length:8%">الملاحظات</th>
           </tr>
           <tr>
-            <th>الكمية</th><th>نعم/لا</th>
-            <th>الكمية</th><th>نعم/لا</th>
-            <th>السبب</th>
-            <th>الكمية م³</th><th>معدل م³/س</th>
-            <th>عدد المضخات</th><th>في الخدمة</th><th>معدل الضخ</th>
+            <th colspan="2">   كمية الانتاج (م3/يوم)  </th>
+            <th colspan="2">  كمية التصدير (م3/يوم)  </th>
+            <th>عدد المضخات</th><th>خارج الخدمة</th><th> السبب</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="lbl-td fw-bold">نساح</td>
-            <td class="ic"><input type="number" id="nasah_nat" placeholder="23542"/></td>
-            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
-            <td class="ic"><input type="number" id="nasah_low"/></td>
-            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
+            <td colspan="2"class="ic"><input type="text" id="nasah_reason"/></td>
+            <td colspan="2"class="ic"><input type="text" id="nasah_reason"/></td>
             <td class="ic"><input type="text" id="nasah_reason"/></td>
-            <td class="ic"><input type="number" id="nasah_hpp_qty" placeholder="21496"/></td>
-            <td class="ic"><input type="number" id="nasah_hpp_rate" placeholder="896"/></td>
-            <td class="ic"><input type="number" id="nasah_pump_total" placeholder="4"/></td>
-            <td class="ic"><input type="number" id="nasah_pump_active" placeholder="2"/></td>
-            <td class="ic"><input type="number" id="nasah_pump_rate"/></td>
+            <td class="ic"><input type="text" id="nasah_reason"/></td>
+            <td class="ic"><input type="text" id="nasah_reason"/></td>
+            <td class="ic"><input type="text" id="nasah_reason"/></td>
           </tr>
           <tr>
             <td class="lbl-td fw-bold">منفوحة</td>
-            <td class="ic"><input type="number" id="manf_nat" placeholder="22851"/></td>
-            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
-            <td class="ic"><input type="number" id="manf_low"/></td>
-            <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>نعم</option><option>لا</option></select></td>
-            <td class="ic"><input type="text" id="manf_reason"/></td>
-            <td class="ic"><input type="number" id="manf_hpp_qty" placeholder="22851"/></td>
-            <td class="ic"><input type="number" id="manf_hpp_rate" placeholder="952"/></td>
-            <td class="ic"><input type="number" id="manf_pump_total" placeholder="4"/></td>
-            <td class="ic"><input type="number" id="manf_pump_active" placeholder="2"/></td>
-            <td class="ic"><input type="number" id="manf_pump_rate"/></td>
+            <td colspan="2"class="ic"><input type="text" id="manf_reason"/></td>
+            <td colspan="2"class="ic"><input type="text" id="manf_reason"/></td>
+            <td class="ic"><input type="text" id="manf_reason"/></td>         
+            <td class="ic"><input type="text" id="manf_reason"/></td>            
+            <td class="ic"><input type="text" id="manf_reason"/></td>                      
+            <td class="ic"><input type="text" id="manf_reason"/></td>            
           </tr>
         </tbody>
       </table>
@@ -347,44 +336,44 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
         </thead>
         <tbody>
           <tr><td class="lbl-td">الموقع</td>
-            <td class="ic"><input type="text" id="eq_lift_loc" placeholder="مبنى المضخات"/></td>
-            <td class="ic"><input type="text" id="eq_trans_loc" placeholder="المحطة"/></td>
-            <td class="ic"><input type="text" id="eq_chlor_loc" placeholder="مبنى الكلور"/></td>
+            <td class="ic"><input type="text" id="eq_lift_loc" placeholder=" "/></td>
+            <td class="ic"><input type="text" id="eq_trans_loc" placeholder=""/></td>
+            <td class="ic"><input type="text" id="eq_chlor_loc" placeholder=""/></td>
             <td class="ic"><input type="text" id="eq_start_loc"/></td>
             <td class="ic"><input type="text" id="eq_gen_loc"/></td>
             <td class="ic"><input type="text" id="eq_elec_loc" placeholder="لدى الشركة"/></td>
           </tr>
           <tr><td class="lbl-td">العدد</td>
-            <td class="ic"><input type="number" id="eq_lift_total" placeholder="8"/></td>
-            <td class="ic"><input type="number" id="eq_trans_total" placeholder="6"/></td>
-            <td class="ic"><input type="number" id="eq_chlor_total" placeholder="2"/></td>
-            <td class="ic"><input type="number" id="eq_start_total" placeholder="8"/></td>
+            <td class="ic"><input type="number" id="eq_lift_total" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_trans_total" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_chlor_total" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_start_total" placeholder=""/></td>
             <td class="ic"><input type="number" id="eq_gen_total"/></td>
             <td class="ic"><input type="text" id="eq_elec_total"/></td>
           </tr>
           <tr><td class="lbl-td">في الخدمة</td>
-            <td class="ic"><input type="number" id="eq_lift_active" placeholder="4"/></td>
-            <td class="ic"><input type="number" id="eq_trans_active" placeholder="3"/></td>
-            <td class="ic"><input type="number" id="eq_chlor_active" placeholder="1"/></td>
-            <td class="ic"><input type="number" id="eq_start_active" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="eq_lift_active" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_trans_active" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_chlor_active" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_start_active" placeholder=""/></td>
             <td class="ic"><input type="number" id="eq_gen_active"/></td>
             <td class="ic"><input type="text" id="eq_elec_active"/></td>
           </tr>
           <tr><td class="lbl-td">خارج الخدمة</td>
-            <td class="ic"><input type="number" id="eq_lift_out" placeholder="4"/></td>
-            <td class="ic"><input type="number" id="eq_trans_out" placeholder="3"/></td>
-            <td class="ic"><input type="number" id="eq_chlor_out" placeholder="1"/></td>
-            <td class="ic"><input type="number" id="eq_start_out" placeholder="4"/></td>
+            <td class="ic"><input type="number" id="eq_lift_out" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_trans_out" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_chlor_out" placeholder=""/></td>
+            <td class="ic"><input type="number" id="eq_start_out" placeholder=""/></td>
             <td class="ic"><input type="number" id="eq_gen_out"/></td>
             <td class="ic"><input type="text" id="eq_elec_out"/></td>
           </tr>
           <tr><td class="lbl-td">السبب</td>
-            <td class="ic"><input type="text" id="eq_lift_reason" placeholder="احتياطية"/></td>
-            <td class="ic"><input type="text" id="eq_trans_reason" placeholder="احتياطية"/></td>
-            <td class="ic"><input type="text" id="eq_chlor_reason" placeholder="احتياطية"/></td>
-            <td class="ic"><input type="text" id="eq_start_reason" placeholder="احتياطية"/></td>
+            <td class="ic"><input type="text" id="eq_lift_reason" placeholder=""/></td>
+            <td class="ic"><input type="text" id="eq_trans_reason" placeholder=""/></td>
+            <td class="ic"><input type="text" id="eq_chlor_reason" placeholder=""/></td>
+            <td class="ic"><input type="text" id="eq_start_reason" placeholder=""/></td>
             <td class="ic"><input type="text" id="eq_gen_reason"/></td>
-            <td class="ic"><input type="text" id="eq_elec_reason" placeholder="عطل كهربائي"/></td>
+            <td class="ic"><input type="text" id="eq_elec_reason" placeholder=" "/></td>
           </tr>
         </tbody>
       </table>
@@ -415,9 +404,9 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
           <tr>
             <td>1</td>
             <td class="ic"><select style="width:100%;border:none;font-size:.75rem"><option>وقائية</option><option>تصحيحية</option><option>طارئة</option></select></td>
-            <td class="ic"><input type="text" placeholder="المضخختين (6,7)" style="width:100%"/></td>
-            <td class="ic"><input type="text" placeholder="المحطة" style="width:100%"/></td>
-            <td class="ic"><input type="text" placeholder="تشييك وتغيير زيت (التشغيل الطبيعي، تشحيم، الاهتزازات، النظافة)" style="width:100%"/></td>
+            <td class="ic"><input type="text" placeholder="" style="width:100%"/></td>
+            <td class="ic"><input type="text" placeholder="" style="width:100%"/></td>
+            <td class="ic"><input type="text" placeholder="" style="width:100%"/></td>
             <td class="ic"><input type="text" style="width:100%"/></td>
             <td class="no-print"><button class="btn btn-sm btn-outline-danger p-1" onclick="removeMaintRow(this)"><i class="bi bi-trash3"></i></button></td>
           </tr>
@@ -514,7 +503,7 @@ body{background:#e8f0f8;font-family:'Segoe UI',Tahoma,Arial,sans-serif;font-size
         <div class="col-md-3"><label class="form-label">معد التقرير</label>
           <input type="text" class="form-control" id="supervisor" placeholder= "الاسم"/></div>
         <div class="col-md-3"><label class="form-label">مشرف  التشغيل</label>
-          <input type="text" class="form-control" id="nwcSupervisor" placeholder="عبدالله المطيري"/></div>
+          <input type="text" class="form-control" id="nwcSupervisor" placeholder="الاسم"/></div>
       </div>
     </div>
   </div>
@@ -819,7 +808,7 @@ function buildPrintHTML(r){
 <table class="mb2">
   <tr>
     <th style="${thS};width:7%" rowspan="2">الإنتاج</th>
-    <th style="${thS}" colspan="2">طبيعي</th>
+    <th style="${thS};width:7%" colspan="2">طبيعي</th>
     <th style="${thS}" colspan="2">منخفض</th>
     <th style="${thS};width:12%" rowspan="2">سبب الانخفاض</th>
     <th style="${thS}" colspan="2">التصدير (HPP)</th>
@@ -829,7 +818,7 @@ function buildPrintHTML(r){
     <th style="${thLS}">م³/يوم</th><th style="${thLS}">نعم/لا</th>
     <th style="${thLS}">م³/يوم</th><th style="${thLS}">نعم/لا</th>
     <th style="${thLS}">الكمية م³/يوم</th><th style="${thLS}">معدل الضخ م³/س</th>
-    <th style="${thLS}">العدد الكلي</th><th style="${thLS}">في الخدمة</th><th style="${thLS}">معدل الضخ</th>
+    <th style="${thLS}">العدد الكلي</th><th style="${thLS}">في الخدمة</th><th style="${thLS}">الاسباب</th>
   </tr>
   <tr style="background:${W}">
     <td style="${tdLbl}">نساح</td>
@@ -1128,7 +1117,7 @@ function viewRecord(id){
       <div class="col-6"><strong>نساح:</strong> ${r.nasah_nat||'—'} م³</div>
       <div class="col-6"><strong>منفوحة:</strong> ${r.manf_nat||'—'} م³</div>
       <div class="col-6"><strong>pH (خام):</strong> ${r.q_raw_ph||'—'}</div>
-      <div class="col-6"><strong>عكورة:</strong> ${r.q_raw_turb||'—'} NTU</div>
+      <div class="col-6"><strong>عكارة:</strong> ${r.q_raw_turb||'—'} NTU</div>
       <div class="col-6"><strong>كلور حر:</strong> ${r.q_raw_cl||'—'} mg/l</div>
       <div class="col-6"><strong>TDS:</strong> ${r.q_raw_tds||'—'} mg/l</div>
     </div>
@@ -1243,8 +1232,8 @@ document.getElementById('dateGreg').addEventListener('change',function(){
   const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
   document.getElementById('dayName').value=days[new Date(this.value).getDay()];
 });
-document.getElementById('city').value='الرياض';
-document.getElementById('sector').value='الأوسط';
+document.getElementById('city').value='';
+document.getElementById('sector').value='';
 </script>
 </body>
 </html>
