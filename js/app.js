@@ -124,3 +124,39 @@ function resetForm() {
 
     location.reload();
 }
+document
+  .getElementById('addMaintenanceBtn')
+  .addEventListener('click', addMaintenanceRow);
+
+function addMaintenanceRow() {
+
+    const container =
+      document.getElementById('maintenanceContainer');
+
+    const row =
+      document.createElement('div');
+
+    row.className =
+      'maintenance-row grid';
+
+    row.innerHTML = `
+
+      <div class="field">
+        <label>المعدة</label>
+        <input type="text" class="m_equip">
+      </div>
+
+      <div class="field">
+        <label>الموقع</label>
+        <input type="text" class="m_loc">
+      </div>
+
+      <div class="field full-width">
+        <label>وصف العمل</label>
+        <textarea class="m_desc"></textarea>
+      </div>
+
+    `;
+
+    container.appendChild(row);
+}
