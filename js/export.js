@@ -17,12 +17,6 @@ export function exportExcel() {
 
       [],
 
-      ['إنتاج الحاير',
-      document.getElementById('h_prod').value],
-
-      ['تصدير الحاير',
-      document.getElementById('h_export').value],
-
       ['إنتاج منفوحة',
       document.getElementById('m_prod').value],
 
