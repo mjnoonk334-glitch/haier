@@ -1,118 +1,250 @@
-<!-- الإنتاج -->
-<div class="section">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-  <div class="section-header">
-    💧 مخرجات المحطات
-  </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير تشغيل محطة الحاير</title>
 
-  <div class="grid">
+    <!-- Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-    <!-- الحاير -->
-    <div class="field">
-      <label>إنتاج الحاير</label>
-      <input type="number" id="h_prod">
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/print.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>تقرير تشغيل محطة الحاير</h2>
+
+        <form id="mainForm">
+
+            <!-- البيانات العامة -->
+            <div class="section">
+                <div class="section-header">📍 البيانات العامة</div>
+
+                <div class="grid">
+
+                    <div class="field">
+                        <label>التاريخ</label>
+                        <input type="date" id="reportDate">
+                    </div>
+
+                    <div class="field">
+                        <label>الاستهلاك (MW/DAY)</label>
+                        <input type="number" id="power">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- الإنتاج -->
+            <div class="section">
+                <div class="section-header">💧 الإنتاج والتصدير</div>
+
+                <div class="grid">
+
+                    <div class="field">
+                        <label>إنتاج الحاير (م3)</label>
+                        <input type="number" id="h_prod">
+                    </div>
+
+                    <div class="field">
+                        <label>تصدير الحاير (م3)</label>
+                        <input type="number" id="h_export">
+                    </div>
+
+                    <div class="field">
+                        <label>إنتاج منفوحة (م3)</label>
+                        <input type="number" id="manfouha_prod">
+                    </div>
+
+                    <div class="field">
+                        <label>تصدير منفوحة (م3)</label>
+                        <input type="number" id="manfouha_export">
+                    </div>
+
+                    <div class="field">
+                        <label>إنتاج الشميسي (م3)</label>
+                        <input type="number" id="shumaisi_prod">
+                    </div>
+
+                    <div class="field">
+                        <label>تصدير الشميسي (م3)</label>
+                        <input type="number" id="shumaisi_export">
+                    </div>
+
+                    <div class="field">
+                        <label>السعة التشغيلية</label>
+                        <input type="number"
+                               id="capacity"
+                               value="50000"
+                               readonly
+                               class="readonly-field">
+                    </div>
+
+                    <div class="field">
+                        <label>الإنتاج الاحتياطي</label>
+                        <input type="number"
+                               id="spare"
+                               readonly
+                               class="readonly-field">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- الآبار -->
+            <div class="section">
+                <div class="section-header">🚜 حالة الآبار</div>
+
+                <div class="grid">
+
+                    <div class="field">
+                        <label>آبار في الخدمة</label>
+                        <input type="number" id="wells_in">
+                    </div>
+
+                    <div class="field">
+                        <label>آبار خارج الخدمة</label>
+                        <input type="number" id="wells_out">
+                    </div>
+
+                    <div class="field full-width">
+                        <label>ملاحظات الآبار</label>
+                        <textarea id="well_notes" rows="3"></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- جودة المياه -->
+            <div class="section">
+                <div class="section-header">🧪 جودة المياه</div>
+
+                <div class="grid">
+
+                    <div class="field">
+                        <label>Temp</label>
+                        <input type="number" step="0.1" id="q_temp">
+                    </div>
+
+                    <div class="field">
+                        <label>Turbidity</label>
+                        <input type="number" step="0.1" id="q_turb">
+                    </div>
+
+                    <div class="field">
+                        <label>Free Cl</label>
+                        <input type="number" step="0.1" id="q_cl">
+                    </div>
+
+                    <div class="field">
+                        <label>pH</label>
+                        <input type="number" step="0.1" id="q_ph">
+                    </div>
+
+                    <div class="field">
+                        <label>Cond.</label>
+                        <input type="number" id="q_cond">
+                    </div>
+
+                    <div class="field">
+                        <label>TDS</label>
+                        <input type="number" id="q_tds">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- الصيانة -->
+            <div class="section">
+                <div class="section-header">🛠️ تقرير الصيانة</div>
+
+                <div id="maintenanceContainer">
+
+                    <div class="maintenance-row">
+
+                        <div class="grid">
+
+                            <div class="field">
+                                <label>المعدة</label>
+                                <input type="text" class="m_equip">
+                            </div>
+
+                            <div class="field">
+                                <label>الموقع</label>
+                                <input type="text" class="m_loc">
+                            </div>
+
+                            <div class="field full-width">
+                                <label>وصف العمل</label>
+                                <textarea class="m_desc" rows="2"></textarea>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button type="button"
+                        class="add-btn"
+                        id="addMaintenanceBtn">
+                    + إضافة سطر صيانة
+                </button>
+
+            </div>
+
+            <!-- التوقيع -->
+            <div class="section">
+                <div class="section-header">👤 التوقيع</div>
+
+                <div class="grid">
+
+                    <div class="field">
+                        <label>معد التقرير</label>
+                        <input type="text" id="reporter_name">
+                    </div>
+
+                    <div class="field">
+                        <label>المشرف</label>
+                        <input type="text" id="supervisor_name">
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+
     </div>
 
-    <div class="field">
-      <label>تصدير الحاير</label>
-      <input type="number" id="h_export">
-    </div>
+    <!-- Toolbar -->
+    <div class="toolbar">
 
-    <!-- منفوحة -->
-    <div class="field">
-      <label>إنتاج منفوحة</label>
-      <input type="number" id="m_prod">
-    </div>
+        <button class="btn-reset" id="resetBtn">
+            🗑️ مسح
+        </button>
 
-    <div class="field">
-      <label>تصدير منفوحة</label>
-      <input type="number" id="m_export">
-    </div>
+        <button class="btn-save" id="saveBtn">
+            💾 حفظ
+        </button>
 
-    <!-- الشميسي -->
-    <div class="field">
-      <label>إنتاج الشميسي</label>
-      <input type="number" id="s_prod">
-    </div>
+        <button class="btn-export" id="excelBtn">
+            📊 Excel
+        </button>
 
-    <div class="field">
-      <label>تصدير الشميسي</label>
-      <input type="number" id="s_export">
-    </div>
-
-    <!-- الاحتياطي -->
-    <div class="field">
-      <label>الإنتاج الاحتياطي</label>
-      <input
-        type="number"
-        id="h_spare"
-        readonly
-        class="readonly-field">
-    </div>
-
-  </div>
-
-</div>
-<!-- الصيانة -->
-<div class="section">
-
-  <div class="section-header">
-    🛠️ تقرير الصيانة
-  </div>
-
-  <div id="maintenanceContainer">
-
-    <div class="maintenance-row grid">
-
-      <div class="field">
-        <label>المعدة</label>
-        <input type="text" class="m_equip">
-      </div>
-
-      <div class="field">
-        <label>الموقع</label>
-        <input type="text" class="m_loc">
-      </div>
-
-      <div class="field full-width">
-        <label>وصف العمل</label>
-        <textarea class="m_desc"></textarea>
-      </div>
+        <button class="btn-print" id="printBtn">
+            🖨️ طباعة
+        </button>
 
     </div>
 
-  </div>
+    <!-- JS -->
+    <script type="module" src="./js/app.js"></script>
 
-  <button
-    type="button"
-    id="addMaintenanceBtn"
-    class="btn-export"
-    style="margin-top:10px;">
-
-    + إضافة سطر صيانة
-
-  </button>
-
-</div>
-<!-- التوقيع -->
-<div class="section">
-
-  <div class="section-header">
-    👤 التوقيع
-  </div>
-
-  <div class="grid">
-
-    <div class="field">
-      <label>معد التقرير</label>
-      <input type="text" id="reporter_name">
-    </div>
-
-    <div class="field">
-      <label>المشرف</label>
-      <input type="text" id="supervisor_name">
-    </div>
-
-  </div>
-
-</div>
+</body>
+</html>
