@@ -1,0 +1,27 @@
+@media print {
+
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .toolbar {
+        display: none;
+    }
+
+    .container {
+        box-shadow: none;
+        max-width: 100%;
+    }
+
+    input,
+    textarea {
+        border: none;
+        background: transparent;
+    }
+
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+}
